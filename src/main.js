@@ -18,11 +18,11 @@ const state = {
   mobileActiveGender: 'women'
 };
 
-// Persistence from LocalStorage
+// Persistence from LocalStorage with Inzaish Collection keys
 try {
-  const savedCart = localStorage.getItem('aurel_cart');
+  const savedCart = localStorage.getItem('inzaish_cart') || localStorage.getItem('aurel_cart');
   if (savedCart) state.cart = JSON.parse(savedCart);
-  const savedWishlist = localStorage.getItem('aurel_wishlist');
+  const savedWishlist = localStorage.getItem('inzaish_wishlist') || localStorage.getItem('aurel_wishlist');
   if (savedWishlist) state.wishlist = JSON.parse(savedWishlist);
 } catch (e) {
   state.cart = [];
@@ -30,11 +30,11 @@ try {
 }
 
 function saveCart() {
-  try { localStorage.setItem('aurel_cart', JSON.stringify(state.cart)); } catch (e) {}
+  try { localStorage.setItem('inzaish_cart', JSON.stringify(state.cart)); } catch (e) {}
 }
 
 function saveWishlist() {
-  try { localStorage.setItem('aurel_wishlist', JSON.stringify(state.wishlist)); } catch (e) {}
+  try { localStorage.setItem('inzaish_wishlist', JSON.stringify(state.wishlist)); } catch (e) {}
 }
 
 // ============================================================================
@@ -43,36 +43,38 @@ function saveWishlist() {
 const app = document.getElementById('app');
 
 app.innerHTML = `
-  <!-- TOP ANNOUNCEMENT BAR -->
-  <aside class="top-bar">
-    <span>Free Express Nationwide Delivery on Orders Over <strong class="highlight">PKR 7,500</strong></span>
+  <!-- COMPACT STORE POLICIES ANNOUNCEMENT BAR -->
+  <aside class="top-bar" id="announcementBar">
+    <span>Nationwide Express Delivery Across 150+ Cities</span>
     <span>•</span>
-    <span>Cash on Delivery (COD) Available Across All Cities</span>
+    <span>Free Shipping on Orders Over <strong class="highlight">PKR 7,500</strong></span>
     <span>•</span>
-    <span>WhatsApp Styling Concierge: <strong>+92 300 1234567</strong></span>
+    <span>Cash on Delivery (COD) Available</span>
+    <span>•</span>
+    <span>WhatsApp Styling Assistance: <strong class="highlight">+92 300 1234567</strong></span>
   </aside>
 
-  <!-- ARCHITECTURAL HEADER WITH EDITORIAL MEGA-MENUS -->
+  <!-- LUXURY EDITORIAL HEADER WITH ACCESSIBLE MEGA-MENUS -->
   <header class="site-header" id="siteHeader">
     <div class="header-container">
-      <button class="menu-toggle" id="mobileMenuToggle" aria-label="Toggle Navigation">
+      <button class="menu-toggle" id="mobileMenuToggle" aria-label="Open Navigation Menu" aria-expanded="false" aria-controls="mobileNavDrawer">
         <span></span>
         <span></span>
       </button>
 
-      <a href="#" class="brand-logo">
-        <span class="brand-logo-text">AUREL ATELIER</span>
-        <span class="brand-tagline">Lahore • Karachi • London</span>
+      <a href="#" class="brand-logo" aria-label="Inzaish Collection Homepage">
+        <span class="brand-logo-text">INZAISH COLLECTION</span>
+        <span class="brand-tagline">Contemporary Pakistani Luxury • Karachi • Lahore • Islamabad</span>
       </a>
 
-      <!-- PRIMARY NAVIGATION WITH MEGA-MENUS -->
-      <nav class="main-nav" id="mainNav">
-        <!-- WOMEN WITH MEGA-MENU -->
+      <!-- PRIMARY NAVIGATION -->
+      <nav class="main-nav" id="mainNav" aria-label="Main Navigation">
+        <!-- WOMEN WITH ACCESSIBLE MEGA-MENU -->
         <div class="nav-item-has-mega">
-          <a href="#catalog" class="nav-link" id="womenNavTrigger" onclick="window.filterByHero('women-pret')">
+          <button class="nav-link" id="womenNavTrigger" aria-expanded="false" aria-controls="womenMegaMenu" onclick="window.filterByHero('women-pret')">
             Women ▾
-          </a>
-          <div class="mega-menu-wrapper" id="womenMegaMenu">
+          </button>
+          <div class="mega-menu-wrapper" id="womenMegaMenu" role="region" aria-label="Women's Collection Menu">
             <div class="mega-menu-inner">
               <div>
                 <h4 class="mega-col-heading">Unstitched Fabrics <span>Heirloom</span></h4>
@@ -97,7 +99,7 @@ app.innerHTML = `
               </div>
 
               <div>
-                <h4 class="mega-col-heading">Festive &amp; Modest <span>Artisanal</span></h4>
+                <h4 class="mega-col-heading">Festive &amp; Formal <span>Artisanal</span></h4>
                 <ul class="mega-links-list">
                   <li><a href="#catalog" class="mega-link" onclick="window.filterByHero('festive');">Bridal &amp; Formal Peshwas <span class="count">08</span></a></li>
                   <li><a href="#catalog" class="mega-link" onclick="window.filterByHero('festive');">Marori &amp; Zardozi Threadwork <span class="count">12</span></a></li>
@@ -123,12 +125,12 @@ app.innerHTML = `
           </div>
         </div>
 
-        <!-- MEN WITH MEGA-MENU -->
+        <!-- MEN WITH ACCESSIBLE MEGA-MENU -->
         <div class="nav-item-has-mega">
-          <a href="#catalog" class="nav-link" id="menNavTrigger" onclick="window.filterByHero('men-eastern')">
+          <button class="nav-link" id="menNavTrigger" aria-expanded="false" aria-controls="menMegaMenu" onclick="window.filterByHero('men-eastern')">
             Men ▾
-          </a>
-          <div class="mega-menu-wrapper" id="menMegaMenu">
+          </button>
+          <div class="mega-menu-wrapper" id="menMegaMenu" role="region" aria-label="Men's Collection Menu">
             <div class="mega-menu-inner">
               <div>
                 <h4 class="mega-col-heading">Eastern Traditional <span>Bespoke</span></h4>
@@ -151,7 +153,7 @@ app.innerHTML = `
               </div>
 
               <div>
-                <h4 class="mega-col-heading">Contemporary &amp; Scents <span>Objects</span></h4>
+                <h4 class="mega-col-heading">Contemporary &amp; Objects <span>Lifestyle</span></h4>
                 <ul class="mega-links-list">
                   <li><a href="#catalog" class="mega-link" onclick="window.filterByHero('men-eastern');">Pure Linen Relaxed Shirts <span class="count">14</span></a></li>
                   <li><a href="#catalog" class="mega-link" onclick="window.filterByHero('men-eastern');">Supima Cotton T-Shirts <span class="count">11</span></a></li>
@@ -176,20 +178,20 @@ app.innerHTML = `
           </div>
         </div>
 
-        <a href="#catalog" class="nav-link" data-filter="all">All Works</a>
-        <a href="#catalog" class="nav-link" data-filter="women-unstitched">Unstitched 3-Pc</a>
-        <a href="#catalog" class="nav-link" data-filter="festive">Festive Edits</a>
-        <a href="#textureLab" class="nav-link featured-link">Textile Lab (3D)</a>
+        <a href="#catalog" class="nav-link" data-filter="all">New Arrivals</a>
+        <a href="#catalog" class="nav-link" data-filter="women-unstitched">Unstitched</a>
+        <a href="#catalog" class="nav-link" data-filter="women-pret">Ready-to-Wear</a>
+        <a href="#catalog" class="nav-link" data-filter="festive">Festive / Formal</a>
       </nav>
 
       <div class="header-actions">
-        <button class="action-btn" id="searchTriggerBtn" aria-label="Open Search">
+        <button class="action-btn" id="searchTriggerBtn" aria-label="Open Instant Search">
           <span>🔍 Search</span>
         </button>
-        <button class="action-btn" id="wishlistTriggerBtn" aria-label="Open Wishlist">
+        <button class="action-btn" id="wishlistTriggerBtn" aria-label="Open Curated Wishlist">
           <span>Wishlist (<strong id="wishlistBadge">0</strong>)</span>
         </button>
-        <button class="action-btn" id="trackOrderBtn">
+        <button class="action-btn" id="trackOrderBtn" aria-label="Track Your Order Consignment">
           <span>Track</span>
         </button>
         <button class="bag-btn" id="cartToggleBtn" aria-label="Open Shopping Bag">
@@ -200,7 +202,7 @@ app.innerHTML = `
     </div>
   </header>
 
-  <!-- IMMERSIVE FASHION ATELIER HERO (REBUILT FULL VIEWPORT) -->
+  <!-- IMMERSIVE FASHION HERO SECTION -->
   <section class="hero-section" id="heroSection">
     <div class="hero-webgl-canvas" id="textileCanvas"></div>
     <div class="hero-overlay-gradient"></div>
@@ -210,7 +212,7 @@ app.innerHTML = `
       <div class="hero-text-block">
         <div class="hero-eyebrow-badge">
           <span class="dot"></span>
-          <span>Haute Couture Archive • AW 25/26</span>
+          <span>Inzaish Collection • AW 25/26 Archive</span>
         </div>
 
         <h1 class="hero-title">
@@ -219,17 +221,17 @@ app.innerHTML = `
 
         <p class="hero-description">
           Heirloom unbleached raw silk, bespoke Lahore chikankari, and architectural tailoring. 
-          A contemporary Pakistani fashion house celebrating pure natural fibers with disciplined restraint.
+          Inzaish Collection celebrates pure natural fibers and time-honored subcontinental craft with modern restraint.
         </p>
 
         <!-- Dual Direct Shopping Entrypoints -->
         <div class="hero-cta-group">
           <a href="#catalog" class="btn-hero-primary" onclick="window.filterByHero('women-pret')">
-            <span>Explore Women's Atelier</span>
+            <span>Explore Women</span>
             <span class="pill-count">142 Works</span>
           </a>
           <a href="#catalog" class="btn-hero-secondary" onclick="window.filterByHero('men-eastern')">
-            <span>Discover Men's Bespoke</span>
+            <span>Discover Men</span>
             <span class="pill-count">68 Works</span>
           </a>
         </div>
@@ -259,11 +261,11 @@ app.innerHTML = `
       <!-- Right Layered Editorial Card & Rotating Seal -->
       <div class="hero-visual-frame">
         <div class="hero-portrait-card">
-          <div class="hero-seal-badge" title="Aurel Atelier Verified Provenance">
-            <span class="hero-seal-text">AUREL<br>ATELIER<br>2026</span>
+          <div class="hero-seal-badge" title="Inzaish Collection Verified Provenance">
+            <span class="hero-seal-text">INZAISH<br>COLL.<br>2026</span>
           </div>
 
-          <img src="/assets/hero_editorial.jpg" alt="Aurel Atelier Editorial Campaign" class="hero-portrait-img" />
+          <img src="/assets/hero_editorial.jpg" alt="Inzaish Collection Editorial Campaign" class="hero-portrait-img" />
 
           <div class="hero-portrait-caption">
             <div>
@@ -317,7 +319,7 @@ app.innerHTML = `
   <!-- SPLIT CATEGORY PORTAL ("A Study in Contrast") -->
   <section class="split-portal">
     <div class="portal-card" onclick="window.filterByHero('women-pret')" style="cursor: pointer;">
-      <img src="/assets/women_pret_ivory.jpg" alt="Women's Atelier Pret" class="portal-bg-img" />
+      <img src="/assets/women_pret_ivory.jpg" alt="Women's Inzaish Pret" class="portal-bg-img" />
       <div class="portal-overlay"></div>
       <div class="portal-content">
         <span class="portal-eyebrow">Contemporary Womenswear</span>
@@ -344,7 +346,7 @@ app.innerHTML = `
     <div class="section-header">
       <div>
         <span class="section-eyebrow">Catalogue Archive</span>
-        <h2 class="section-title">All Atelier Garments</h2>
+        <h2 class="section-title">All Inzaish Garments</h2>
       </div>
     </div>
 
@@ -451,19 +453,19 @@ app.innerHTML = `
   <footer class="site-footer">
     <div class="footer-container">
       <div>
-        <div class="footer-logo">AUREL ATELIER</div>
+        <div class="footer-logo">INZAISH COLLECTION</div>
         <p class="footer-bio">
-          Contemporary Pakistani fashion house devoted to architectural silhouettes, uncompromised textile purity, and bespoke craftsmanship.
+          Contemporary Pakistani luxury fashion brand devoted to architectural silhouettes, uncompromised textile purity, and bespoke craftsmanship.
         </p>
         <p style="font-size: 0.76rem; color: #888;">
-          Atelier Flagship: Gulberg III, Lahore • Clifton, Karachi
+          Flagship Boutiques: Gulberg III, Lahore • Clifton, Karachi • F-7, Islamabad
         </p>
       </div>
 
       <div>
         <h5 class="footer-heading">Collections</h5>
         <ul class="footer-links">
-          <li><a href="#catalog" onclick="window.filterByHero('women-pret')">Women's Pret</a></li>
+          <li><a href="#catalog" onclick="window.filterByHero('women-pret')">Women's Ready-to-Wear</a></li>
           <li><a href="#catalog" onclick="window.filterByHero('women-unstitched')">Unstitched 3-Piece</a></li>
           <li><a href="#catalog" onclick="window.filterByHero('men-eastern')">Men's Kurta Sets</a></li>
           <li><a href="#catalog" onclick="window.filterByHero('men-eastern')">Tailored Waistcoats</a></li>
@@ -472,30 +474,30 @@ app.innerHTML = `
       </div>
 
       <div>
-        <h5 class="footer-heading">Client Care</h5>
+        <h5 class="footer-heading">Client Services</h5>
         <ul class="footer-links">
           <li><a href="#" id="footerTrackLink">Track Your Order</a></li>
           <li><a href="#" id="footerSizeLink">Imperial Size Guide</a></li>
-          <li><a href="#" onclick="window.openPolicyModal('shipping'); return false;">Shipping &amp; COD Policies</a></li>
+          <li><a href="#" onclick="window.openPolicyModal('shipping'); return false;">Shipping &amp; Delivery Policies</a></li>
           <li><a href="#" onclick="window.openPolicyModal('returns'); return false;">Returns &amp; Exchanges</a></li>
           <li><a href="https://wa.me/923001234567" target="_blank" rel="noopener">WhatsApp Concierge (+92 300 1234567)</a></li>
         </ul>
       </div>
 
       <div>
-        <h5 class="footer-heading">The Atelier Gazette</h5>
+        <h5 class="footer-heading">The Inzaish Gazette</h5>
         <p style="font-size: 0.8rem; color: #A8A69E; margin-bottom: 0.75rem;">
           Subscribe to receive private invitations to seasonal drops and limited fabric releases.
         </p>
-        <form class="newsletter-input-group" onsubmit="event.preventDefault(); window.showToast('Thank you for subscribing to the Atelier Gazette.');">
-          <input type="email" class="newsletter-input" placeholder="Your email address" required />
+        <form class="newsletter-input-group" onsubmit="event.preventDefault(); window.showToast('Thank you for subscribing to Inzaish Collection.');">
+          <input type="email" class="newsletter-input" placeholder="Your email address" required aria-label="Email address" />
           <button type="submit" class="newsletter-submit">Join</button>
         </form>
       </div>
     </div>
 
     <div class="footer-bottom">
-      <span>© 2026 AUREL ATELIER. All Rights Reserved. Built for the Pakistani Luxury Market.</span>
+      <span>© 2026 INZAISH COLLECTION. All Rights Reserved. Built for the Pakistani Luxury Market.</span>
       <span>Payments: Cash on Delivery • PayFast • Safepay • Visa / Mastercard</span>
     </div>
   </footer>
@@ -509,7 +511,7 @@ app.innerHTML = `
     <div class="search-container">
       <div class="search-header-row">
         <input type="text" class="search-input-box" id="searchInput" placeholder="Search unstitched, pret, silk, waistcoats..." autofocus />
-        <button class="search-close-btn" id="searchCloseBtn">✕</button>
+        <button class="search-close-btn" id="searchCloseBtn" aria-label="Close search">✕</button>
       </div>
 
       <div class="search-quick-tags">
@@ -532,19 +534,19 @@ app.innerHTML = `
   <div class="wishlist-drawer" id="wishlistDrawer">
     <div class="cart-header">
       <span class="cart-title">Your Curated Wishlist (<span id="wishlistCountHeader">0</span>)</span>
-      <button class="cart-close-btn" id="wishlistCloseBtn">✕</button>
+      <button class="cart-close-btn" id="wishlistCloseBtn" aria-label="Close Wishlist">✕</button>
     </div>
     <div class="cart-items" id="wishlistItemsList">
       <!-- Items dynamically populated -->
     </div>
   </div>
 
-  <!-- REDESIGNED RESPONSIVE MOBILE NAVIGATION DRAWER -->
+  <!-- REFINED RESPONSIVE MOBILE NAVIGATION DRAWER -->
   <div class="mobile-nav-backdrop" id="mobileNavBackdrop"></div>
-  <div class="mobile-nav-drawer" id="mobileNavDrawer">
+  <div class="mobile-nav-drawer" id="mobileNavDrawer" role="dialog" aria-modal="true" aria-label="Mobile Navigation">
     <div class="mobile-nav-header">
-      <span class="brand-logo-text" style="font-size: 1.3rem;">AUREL ATELIER</span>
-      <button class="cart-close-btn" id="mobileNavCloseBtn">✕</button>
+      <span class="brand-logo-text" style="font-size: 1.25rem;">INZAISH COLLECTION</span>
+      <button class="cart-close-btn" id="mobileNavCloseBtn" aria-label="Close Menu">✕</button>
     </div>
 
     <!-- Mobile Gender Switcher Tabs -->
@@ -631,8 +633,8 @@ app.innerHTML = `
   <!-- CLIENT CARE & POLICY MODAL -->
   <div class="modal-backdrop" id="policyBackdrop">
     <div class="policy-modal-card">
-      <button class="modal-close-btn" id="policyCloseBtn">✕</button>
-      <span style="font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent-brass); font-weight: 600; display: block; margin-bottom: 0.5rem;">Atelier Policies &amp; Services</span>
+      <button class="modal-close-btn" id="policyCloseBtn" aria-label="Close policies">✕</button>
+      <span style="font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent-brass); font-weight: 600; display: block; margin-bottom: 0.5rem;">Inzaish Collection Policies &amp; Services</span>
       <h3 style="font-family: var(--font-serif); font-size: 2.1rem; font-weight: 400; margin-bottom: 1.5rem;" id="policyModalTitle">Client Services</h3>
 
       <div class="policy-nav-tabs">
@@ -644,7 +646,7 @@ app.innerHTML = `
 
       <div class="policy-content-pane active" id="pane-shipping">
         <h4>Nationwide Delivery &amp; Cash on Delivery (COD)</h4>
-        <p>Aurel Atelier delivers across 150+ Pakistani metropolitan centers and towns via Trax, CallCourier, and TCS Express.</p>
+        <p>Inzaish Collection delivers across 150+ Pakistani metropolitan centers and towns via Trax, CallCourier, and TCS Express.</p>
         <ul>
           <li><strong>Delivery Timelines:</strong> 2 to 3 business days for Lahore, Karachi, and Islamabad/Rawalpindi. 3 to 5 business days for other regional hubs.</li>
           <li><strong>Shipping Charges:</strong> Flat PKR 150 nationwide. Free Express Delivery on orders exceeding PKR 7,500.</li>
@@ -674,8 +676,8 @@ app.innerHTML = `
       </div>
 
       <div class="policy-content-pane" id="pane-heritage">
-        <h4>About Aurel Atelier</h4>
-        <p>Founded in 2026, Aurel Atelier is an independent Pakistani design house operating at the intersection of classical subcontinental textile heritage and contemporary architectural minimalism.</p>
+        <h4>About Inzaish Collection</h4>
+        <p>Founded in 2026, Inzaish Collection is a premier Pakistani fashion house operating at the intersection of classical subcontinental textile heritage and contemporary luxury minimalism.</p>
         <p>Every piece is crafted in limited batch runs using unadulterated natural fibers woven on heritage master looms in Punjab and Sindh.</p>
       </div>
     </div>
@@ -683,7 +685,7 @@ app.innerHTML = `
 
   <!-- SHOPPING BAG / CART DRAWER -->
   <div class="cart-drawer-backdrop" id="cartBackdrop"></div>
-  <div class="cart-drawer" id="cartDrawer">
+  <div class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-label="Shopping Bag">
     <div class="cart-header">
       <span class="cart-title">Your Shopping Bag (<span id="cartCountHeader">0</span>)</span>
       <button class="cart-close-btn" id="cartCloseBtn" aria-label="Close Bag">✕</button>
@@ -717,7 +719,7 @@ app.innerHTML = `
 
   <!-- PRODUCT DETAIL OVERLAY MODAL (PDP) -->
   <div class="modal-backdrop" id="pdpBackdrop">
-    <div class="modal-card" id="pdpCard">
+    <div class="modal-card" id="pdpCard" role="dialog" aria-modal="true" aria-label="Product Details">
       <!-- Populated dynamically -->
     </div>
   </div>
@@ -725,19 +727,19 @@ app.innerHTML = `
   <!-- ORDER TRACKING LOOKUP MODAL -->
   <div class="modal-backdrop" id="trackBackdrop">
     <div class="modal-card" style="grid-template-columns: 1fr; max-width: 540px; padding: 2.5rem;">
-      <button class="modal-close-btn" id="trackCloseBtn">✕</button>
+      <button class="modal-close-btn" id="trackCloseBtn" aria-label="Close tracking">✕</button>
       <span style="font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent-brass); font-weight: 600; display: block; margin-bottom: 0.5rem;">Consignment Tracking</span>
       <h3 style="font-family: var(--font-serif); font-size: 2rem; font-weight: 400; margin-bottom: 1rem;">Track Your Order</h3>
-      <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem;">Enter your Order ID (e.g. AA-2026-891) or your registered Pakistani phone number.</p>
+      <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem;">Enter your Order ID (e.g. IC-2026-891) or your registered Pakistani phone number.</p>
 
       <form id="trackForm" style="display: flex; flex-direction: column; gap: 1rem;">
-        <input type="text" id="trackInput" placeholder="Order ID or 03XX XXXXXXX" required style="padding: 0.95rem; border: 1px solid var(--border-subtle); border-radius: 2px; font-family: inherit; font-size: 0.9rem;" value="AA-2026-891" />
+        <input type="text" id="trackInput" placeholder="Order ID or 03XX XXXXXXX" required style="padding: 0.95rem; border: 1px solid var(--border-subtle); border-radius: 2px; font-family: inherit; font-size: 0.9rem;" value="IC-2026-891" />
         <button type="submit" class="btn-primary" style="width: 100%;">Locate Consignment</button>
       </form>
 
       <div id="trackResult" style="margin-top: 1.5rem; display: none; background: var(--bg-surface); padding: 1.25rem; border: 1px solid var(--border-subtle); border-radius: 2px;">
         <div style="display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 600; margin-bottom: 0.5rem;">
-          <span>Order #AA-2026-891</span>
+          <span>Order #IC-2026-891</span>
           <span style="color: var(--state-success);">● Dispatched</span>
         </div>
         <p style="font-size: 0.76rem; color: var(--text-secondary); margin-bottom: 0.75rem;">Courier: Trax Logistics (Tracking: 78941209PK)</p>
@@ -753,7 +755,7 @@ app.innerHTML = `
   <!-- CHECKOUT MODAL -->
   <div class="modal-backdrop" id="checkoutBackdrop">
     <div class="modal-card" style="grid-template-columns: 1fr; max-width: 620px; padding: 2.5rem;">
-      <button class="modal-close-btn" id="checkoutCloseBtn">✕</button>
+      <button class="modal-close-btn" id="checkoutCloseBtn" aria-label="Close checkout">✕</button>
       <span style="font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent-brass); font-weight: 600; display: block; margin-bottom: 0.5rem;">Express Checkout</span>
       <h3 style="font-family: var(--font-serif); font-size: 2.1rem; font-weight: 400; margin-bottom: 1.5rem;">Finalize Your Order</h3>
 
@@ -820,16 +822,16 @@ app.innerHTML = `
     <div class="modal-card" style="grid-template-columns: 1fr; max-width: 500px; padding: 3rem 2rem; text-align: center;">
       <div style="font-size: 3rem; color: var(--state-success); margin-bottom: 1rem;">✓</div>
       <span style="font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent-brass); font-weight: 600; display: block; margin-bottom: 0.5rem;">Order Successfully Placed</span>
-      <h3 style="font-family: var(--font-serif); font-size: 2.2rem; font-weight: 400; margin-bottom: 0.75rem;">Shukriya. Welcome to Aurel.</h3>
+      <h3 style="font-family: var(--font-serif); font-size: 2.2rem; font-weight: 400; margin-bottom: 0.75rem;">Shukriya. Welcome to Inzaish Collection.</h3>
       <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 1.5rem;">
-        Your order reference is <strong style="color: var(--text-primary);">#AA-2026-948</strong>. A confirmation SMS and WhatsApp dispatch message have been sent to your number.
+        Your order reference is <strong style="color: var(--text-primary);">#IC-2026-948</strong>. A confirmation SMS and WhatsApp dispatch message have been sent to your number.
       </p>
       <button class="btn-primary" id="successDoneBtn" style="width: 100%;">Continue Browsing</button>
     </div>
   </div>
 
   <!-- TOAST NOTIFICATION CONTAINER -->
-  <div class="toast-msg" id="toastMsg">
+  <div class="toast-msg" id="toastMsg" role="status" aria-live="polite">
     <span id="toastIcon">✦</span>
     <span id="toastContent">Garment added to your shopping bag.</span>
   </div>
@@ -864,7 +866,7 @@ function createProductCardHTML(product) {
         <span class="product-tag">${product.tag}</span>
         <button class="product-wishlist-btn ${isWishlisted ? 'active' : ''}" 
                 onclick="window.toggleWishlist('${product.id}', event)" 
-                aria-label="Save to Wishlist" title="Save to Wishlist">
+                aria-label="Save ${product.title} to Wishlist" title="Save to Wishlist">
           ${isWishlisted ? '♥' : '♡'}
         </button>
         <img src="${product.image}" alt="${product.title}" class="product-img" loading="lazy" />
@@ -1028,7 +1030,7 @@ function initSearch() {
     );
 
     if (matches.length === 0) {
-      resultsGrid.innerHTML = `<p style="grid-column: 1/-1; color: #BBB; font-style: italic;">No atelier pieces matched "${q}". Try "Lawn", "Silk", "Kurta", or "Waistcoat".</p>`;
+      resultsGrid.innerHTML = `<p style="grid-column: 1/-1; color: #BBB; font-style: italic;">No Inzaish Collection pieces matched "${q}". Try "Lawn", "Silk", "Kurta", or "Waistcoat".</p>`;
     } else {
       resultsGrid.innerHTML = matches.map(p => `
         <div style="background: rgba(255,255,255,0.06); padding: 1rem; border: 1px solid rgba(255,255,255,0.12); border-radius: 2px; cursor: pointer;" onclick="window.selectSearchResult('${p.id}')">
@@ -1064,7 +1066,7 @@ window.openPDP = function(productId) {
 
   const pdpCard = document.getElementById('pdpCard');
   pdpCard.innerHTML = `
-    <button class="modal-close-btn" id="pdpCloseBtn">✕</button>
+    <button class="modal-close-btn" id="pdpCloseBtn" aria-label="Close Product Details">✕</button>
 
     <div class="modal-gallery">
       <img src="${product.image}" alt="${product.title}" id="pdpMainImage" />
@@ -1119,7 +1121,7 @@ window.openPDP = function(productId) {
         <button class="modal-add-btn" onclick="window.addToCartFromPDP()">
           Add to Shopping Bag • ${product.priceFormatted}
         </button>
-        <a class="modal-whatsapp-btn" href="https://wa.me/923001234567?text=Hello%20Aurel%20Atelier,%20I%20would%20like%20to%20order%20the%20${encodeURIComponent(product.title)}%20(${product.priceFormatted})" target="_blank" rel="noopener">
+        <a class="modal-whatsapp-btn" href="https://wa.me/923001234567?text=Hello%20Inzaish%20Collection,%20I%20would%20like%20to%20order%20the%20${encodeURIComponent(product.title)}%20(${product.priceFormatted})" target="_blank" rel="noopener">
           <span>💬 Order Instantly via WhatsApp</span>
         </a>
       </div>
@@ -1191,7 +1193,7 @@ function updateCartUI() {
   if (fill && text) {
     if (subtotal >= state.freeShippingThreshold) {
       fill.style.width = '100%';
-      text.innerHTML = '<span style="color: var(--state-success); font-weight: 600;">✓ You have qualified for Free Express Nationwide Delivery!</span>';
+      text.innerHTML = '<span style="color: var(--state-success); font-weight: 600;">✓ Qualified for Free Express Nationwide Delivery!</span>';
     } else {
       const remaining = state.freeShippingThreshold - subtotal;
       const pct = Math.min((subtotal / state.freeShippingThreshold) * 100, 100);
@@ -1218,12 +1220,12 @@ function updateCartUI() {
             <span class="cart-item-meta">Size: ${item.size} • ${item.fabric}</span>
             <span class="cart-item-price">${formatPKR(item.price)}</span>
             <div class="cart-qty-ctrls">
-              <button class="cart-qty-btn" onclick="window.changeCartQty(${idx}, -1)">−</button>
+              <button class="cart-qty-btn" onclick="window.changeCartQty(${idx}, -1)" aria-label="Decrease quantity">−</button>
               <span class="cart-qty-val">${item.qty}</span>
-              <button class="cart-qty-btn" onclick="window.changeCartQty(${idx}, 1)">+</button>
+              <button class="cart-qty-btn" onclick="window.changeCartQty(${idx}, 1)" aria-label="Increase quantity">+</button>
             </div>
           </div>
-          <button style="color: var(--text-muted); font-size: 1.1rem; padding: 0.5rem;" onclick="window.removeCartItem(${idx})">✕</button>
+          <button style="color: var(--text-muted); font-size: 1.1rem; padding: 0.5rem;" onclick="window.removeCartItem(${idx})" aria-label="Remove item">✕</button>
         </div>
       `).join('');
     }
@@ -1249,15 +1251,17 @@ window.removeCartItem = function(index) {
 function openCart() {
   document.getElementById('cartDrawer').classList.add('active');
   document.getElementById('cartBackdrop').classList.add('active');
+  document.body.style.overflow = 'hidden';
 }
 
 function closeCart() {
   document.getElementById('cartDrawer').classList.remove('active');
   document.getElementById('cartBackdrop').classList.remove('active');
+  document.body.style.overflow = '';
 }
 
 // ============================================================================
-// REDESIGNED MOBILE NAVIGATION CONTROLLER
+// MOBILE NAVIGATION CONTROLLER WITH ACCESSIBILITY & SCROLL LOCK
 // ============================================================================
 function initMobileNav() {
   const toggleBtn = document.getElementById('mobileMenuToggle');
@@ -1268,10 +1272,14 @@ function initMobileNav() {
   const openNav = () => {
     drawer.classList.add('active');
     backdrop.classList.add('active');
+    toggleBtn.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
   };
   window.closeMobileNav = () => {
     drawer.classList.remove('active');
     backdrop.classList.remove('active');
+    toggleBtn.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
   };
 
   if (toggleBtn) toggleBtn.onclick = openNav;
@@ -1318,6 +1326,7 @@ window.openPolicyModal = function(tabName = 'shipping') {
   panes.forEach(p => p.classList.toggle('active', p.id === `pane-${tabName}`));
 
   backdrop.classList.add('active');
+  document.body.style.overflow = 'hidden';
 };
 
 function initPolicyTabs() {
@@ -1335,8 +1344,13 @@ function initPolicyTabs() {
     };
   });
 
-  if (closeBtn) closeBtn.onclick = () => backdrop.classList.remove('active');
-  if (backdrop) backdrop.onclick = (e) => { if (e.target === backdrop) backdrop.classList.remove('active'); };
+  const closePolicy = () => {
+    backdrop.classList.remove('active');
+    document.body.style.overflow = '';
+  };
+
+  if (closeBtn) closeBtn.onclick = closePolicy;
+  if (backdrop) backdrop.onclick = (e) => { if (e.target === backdrop) closePolicy(); };
 }
 
 // ============================================================================
@@ -1366,6 +1380,7 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('wishlistDrawer')?.classList.remove('active');
       document.getElementById('wishlistBackdrop')?.classList.remove('active');
       document.querySelectorAll('.mega-menu-wrapper').forEach(m => m.classList.remove('is-open'));
+      document.body.style.overflow = '';
     }
   });
 
@@ -1384,20 +1399,16 @@ document.addEventListener('DOMContentLoaded', () => {
     wishlistBtn.onclick = () => {
       wishlistDrawer.classList.add('active');
       wishlistBackdrop.classList.add('active');
+      document.body.style.overflow = 'hidden';
     };
   }
-  if (wishlistCloseBtn) {
-    wishlistCloseBtn.onclick = () => {
-      wishlistDrawer.classList.remove('active');
-      wishlistBackdrop.classList.remove('active');
-    };
-  }
-  if (wishlistBackdrop) {
-    wishlistBackdrop.onclick = () => {
-      wishlistDrawer.classList.remove('active');
-      wishlistBackdrop.classList.remove('active');
-    };
-  }
+  const closeWishlist = () => {
+    wishlistDrawer.classList.remove('active');
+    wishlistBackdrop.classList.remove('active');
+    document.body.style.overflow = '';
+  };
+  if (wishlistCloseBtn) wishlistCloseBtn.onclick = closeWishlist;
+  if (wishlistBackdrop) wishlistBackdrop.onclick = closeWishlist;
 
   // Filter Pills click handler
   const filterPills = document.querySelectorAll('.filter-pill[data-cat]');
@@ -1454,10 +1465,15 @@ document.addEventListener('DOMContentLoaded', () => {
   window.openTrackModal = (e) => {
     if (e) e.preventDefault();
     trackBackdrop.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  };
+  const closeTrackModal = () => {
+    trackBackdrop.classList.remove('active');
+    document.body.style.overflow = '';
   };
   if (trackBtn) trackBtn.onclick = window.openTrackModal;
   if (footerTrackLink) footerTrackLink.onclick = window.openTrackModal;
-  if (trackCloseBtn) trackCloseBtn.onclick = () => trackBackdrop.classList.remove('active');
+  if (trackCloseBtn) trackCloseBtn.onclick = closeTrackModal;
 
   const trackForm = document.getElementById('trackForm');
   if (trackForm) {
@@ -1472,7 +1488,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (footerSizeLink) {
     footerSizeLink.onclick = (e) => {
       e.preventDefault();
-      alert('Aurel Atelier Imperial Sizing Standards (Inches):\n\n' +
+      alert('Inzaish Collection Imperial Sizing Standards (Inches):\n\n' +
             'XS: Chest 34" | Waist 26" | Hips 36" | Kurta Length 38"\n' +
             'S:  Chest 36" | Waist 28" | Hips 38" | Kurta Length 38"\n' +
             'M:  Chest 38" | Waist 30" | Hips 40" | Kurta Length 39"\n' +
@@ -1500,25 +1516,32 @@ document.addEventListener('DOMContentLoaded', () => {
       const subtotal = state.cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
       document.getElementById('checkoutTotalText').textContent = formatPKR(subtotal);
       checkoutBackdrop.classList.add('active');
+      document.body.style.overflow = 'hidden';
     };
   }
 
-  if (checkoutCloseBtn) checkoutCloseBtn.onclick = () => checkoutBackdrop.classList.remove('active');
+  const closeCheckout = () => {
+    checkoutBackdrop.classList.remove('active');
+    document.body.style.overflow = '';
+  };
+  if (checkoutCloseBtn) checkoutCloseBtn.onclick = closeCheckout;
 
   if (checkoutForm) {
     checkoutForm.onsubmit = (e) => {
       e.preventDefault();
-      checkoutBackdrop.classList.remove('active');
+      closeCheckout();
       state.cart = [];
       saveCart();
       updateCartUI();
       successBackdrop.classList.add('active');
+      document.body.style.overflow = 'hidden';
     };
   }
 
   if (successDoneBtn) {
     successDoneBtn.onclick = () => {
       successBackdrop.classList.remove('active');
+      document.body.style.overflow = '';
     };
   }
 });

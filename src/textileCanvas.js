@@ -10,7 +10,7 @@ export function initTextileCanvas(containerId) {
 
   // Reduced motion preference check
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    console.log('[Aurel Atelier 3D] Reduced motion enabled; 3D canvas idle.');
+    console.log('[Inzaish Collection 3D] Reduced motion enabled; 3D canvas idle.');
     return;
   }
 
@@ -30,7 +30,7 @@ export function initTextileCanvas(containerId) {
       powerPreference: 'high-performance'
     });
   } catch (e) {
-    console.warn('[Aurel Atelier] WebGL not supported on device:', e);
+    console.warn('[Inzaish Collection] WebGL not supported on device:', e);
     return;
   }
 

@@ -1,5 +1,5 @@
 /**
- * AUREL ATELIER - Flagship Garment Catalogue & Metadata
+ * INZAISH COLLECTION - Flagship Garment Catalogue & Metadata
  * Tailored specifically for the Pakistani luxury market.
  */
 
