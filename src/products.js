@@ -143,5 +143,143 @@ export const PRODUCTS = [
     ],
     stock: 2,
     description: 'A breathtaking heirloom piece. Cut from heavyweight royal emerald silk karandi, reflecting rich heritage tones and meticulous hand-embellished zari work for festive occasions and weddings.'
+  },
+  {
+    id: 'aa-w04',
+    title: 'The "Sahar" Organza Dupatta & Lawn Suit',
+    slug: 'sahar-organza-lawn-suit',
+    category: 'women-unstitched',
+    categoryName: "Women's Unstitched",
+    collection: 'Heirloom Unstitched',
+    price: 12850,
+    priceFormatted: 'PKR 12,850',
+    tag: 'Luxury Lawn 3-Pc',
+    image: '/assets/women_unstitched_luxe.jpg',
+    pieceCount: '3-Piece Unstitched',
+    fabric: 'Super-Fine Combed Lawn with Silk Organza',
+    specs: {
+      shirt: '3.25 Meters Combed Lawn with Paisley Threadwork (Width: 44")',
+      dupatta: '2.50 Meters Digital Printed Handwoven Organza with Gold Kiran Trim',
+      trouser: '2.50 Meters Solid Dyed Cambric Cotton',
+      inclusions: 'Cutwork embroidered daman border, scalloped sleeve motifs',
+      care: 'Dry clean recommended.'
+    },
+    sizes: [
+      { name: 'Unstitched', chest: 'Custom Tailoring Available', length: 'Full Fabric Included' }
+    ],
+    stock: 6,
+    description: 'A light, romantic afternoon silhouette. Breathable fine lawn in soft almond and blush tones, paired with an airy organza dupatta designed to withstand warm Pakistani summers.'
+  },
+  {
+    id: 'aa-w05',
+    title: 'The Travertine Relaxed Raw Silk Tunic',
+    slug: 'travertine-relaxed-raw-silk-tunic',
+    category: 'women-pret',
+    categoryName: "Women's Ready-to-Wear",
+    collection: 'Architectural Edit 01',
+    price: 9450,
+    priceFormatted: 'PKR 9,450',
+    tag: 'Pure Raw Silk',
+    image: '/assets/women_pret_ivory.jpg',
+    pieceCount: '2-Piece Co-Ord',
+    fabric: '100% Hand-Dyed Raw Silk (80g)',
+    specs: {
+      shirt: 'Relaxed A-line tunic with dropped shoulders and slit band placket (Length: 40")',
+      trouser: 'Matching cropped cigarette trouser with side pockets',
+      inclusions: 'Matte horn dome buttons, hand-finished overcast hemlines',
+      care: 'Dry clean strictly advised.'
+    },
+    sizes: [
+      { name: 'XS', chest: '34"', waist: '26"', hips: '36"', length: '39"' },
+      { name: 'S', chest: '36"', waist: '28"', hips: '38"', length: '40"' },
+      { name: 'M', chest: '38"', waist: '30"', hips: '40"', length: '40"' },
+      { name: 'L', chest: '41"', waist: '33"', hips: '43"', length: '41"' }
+    ],
+    stock: 5,
+    description: 'Effortless quiet luxury. Rendered in a soothing travertine tone, this pure raw silk tunic embodies relaxed architectural volume without sacrificing structure.'
+  },
+  {
+    id: 'aa-m03',
+    title: 'The Ivory Liquid Cotton Shalwar Kameez',
+    slug: 'ivory-liquid-cotton-shalwar-kameez',
+    category: 'men-eastern',
+    categoryName: "Men's Eastern Wear",
+    collection: 'Bespoke Eastern',
+    price: 8450,
+    priceFormatted: 'PKR 8,450',
+    tag: 'Egyptian Giza Cotton',
+    image: '/assets/men_eastern_onyx.jpg',
+    pieceCount: '2-Piece Set',
+    fabric: '100% Egyptian Long-Staple Giza Cotton (Liquid Lustre Finish)',
+    specs: {
+      shirt: 'Traditional band collar kurta with French double placket and cuff detailing (Length: 42")',
+      trouser: 'Full traditional pleated shalwar with drawstring closure',
+      inclusions: 'Genuine mother-of-pearl buttons, concealed mobile pocket',
+      care: 'Gentle hand-wash or dry clean.'
+    },
+    sizes: [
+      { name: 'S', chest: '38"', collar: '14.5"', length: '41"' },
+      { name: 'M', chest: '40"', collar: '15.5"', length: '42"' },
+      { name: 'L', chest: '43"', collar: '16.5"', length: '43"' },
+      { name: 'XL', chest: '46"', collar: '17.5"', length: '44"' }
+    ],
+    stock: 8,
+    description: 'The quintessential Eastern formal ensemble. Liquid-finished Egyptian cotton provides a subtle silk-like sheen while preserving breathability in warmer climates.'
+  },
+  {
+    id: 'aa-m04',
+    title: 'The Heritage Charcoal Jamawar Waistcoat',
+    slug: 'heritage-charcoal-jamawar-waistcoat',
+    category: 'men-eastern',
+    categoryName: "Men's Eastern Wear",
+    collection: 'Formal Suiting',
+    price: 9850,
+    priceFormatted: 'PKR 9,850',
+    tag: 'Bespoke Waistcoat',
+    image: '/assets/men_waistcoat_heritage.jpg',
+    pieceCount: '1-Piece Layer',
+    fabric: 'Textured Jamawar Weave with Silk-Blend Lining',
+    specs: {
+      shirt: 'Tailored 5-button waistcoat with structured horsehair chest canvas (Length: 28")',
+      trouser: 'N/A (Layering garment)',
+      inclusions: 'Antiqued cast brass buttons, interior pocket, welt breast pocket',
+      care: 'Dry clean only.'
+    },
+    sizes: [
+      { name: '38', chest: '38"', waist: '34"', length: '27.5"' },
+      { name: '40', chest: '40"', waist: '36"', length: '28"' },
+      { name: '42', chest: '42"', waist: '38"', length: '28.5"' },
+      { name: '44', chest: '44"', waist: '40"', length: '29"' }
+    ],
+    stock: 4,
+    description: 'Subtle textural richness. A muted charcoal tone with heritage tonal weave, engineered to pair effortlessly over ivory or black kurtas for evening occasions.'
+  },
+  {
+    id: 'aa-w06',
+    title: 'The "Zehra" Marori Velvet Shawl & Ensemble',
+    slug: 'zehra-marori-velvet-shawl-ensemble',
+    category: 'festive',
+    categoryName: 'Festive & Formal',
+    collection: 'Atelier Couture',
+    price: 28500,
+    priceFormatted: 'PKR 28,500',
+    tag: 'Pure Micro Velvet',
+    image: '/assets/women_festive_emerald.jpg',
+    pieceCount: '2-Piece Set',
+    fabric: '9000 Micro Velvet with Pure Raw Silk Kurta',
+    specs: {
+      shirt: 'Minimalist deep jewel raw silk straight kurta (Length: 44")',
+      dupatta: '2.75 Meters Heavy 9000 Micro Velvet Shawl with Four-Sided Marori & Zari Borders',
+      trouser: 'Dyed raw silk straight trouser',
+      inclusions: 'Hand-knotted silk thread tassels on corners, gold cord piping',
+      care: 'Store in breathable muslin cloth. Dry clean only.'
+    },
+    sizes: [
+      { name: 'S', chest: '36"', waist: '28"', length: '44"' },
+      { name: 'M', chest: '38"', waist: '30"', length: '44"' },
+      { name: 'L', chest: '41"', waist: '33"', length: '45"' }
+    ],
+    stock: 3,
+    description: 'Regal cold-weather couture. Crafted from heavyweight 9000 micro velvet, adorned with antique tilla threadwork inspired by Mughal floral geometry.'
   }
 ];

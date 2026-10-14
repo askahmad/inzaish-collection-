@@ -3,6 +3,13 @@ import './enhancements.css';
 import { PRODUCTS } from './products.js';
 import { initTextileCanvas } from './textileCanvas.js';
 import { initMaterialViewer } from './materialViewer.js';
+import { Router } from './router.js';
+import { renderCollectionView } from './views/collectionView.js';
+import { renderProductDetailPage } from './views/pdpView.js';
+import { renderWishlistPage } from './views/wishlistView.js';
+import { renderCheckoutPage, renderOrderSuccessPage } from './views/checkoutView.js';
+import { renderAccountPage } from './views/accountView.js';
+import { renderInfoPage } from './views/infoPagesView.js';
 
 // ============================================================================
 // COMMERCE STATE MANAGEMENT
@@ -10,6 +17,9 @@ import { initMaterialViewer } from './materialViewer.js';
 const state = {
   cart: [],
   wishlist: [],
+  orders: [],
+  appliedCoupon: null,
+  lastOrder: null,
   activeCategory: 'all',
   activeSort: 'featured',
   selectedProduct: null,
@@ -24,9 +34,12 @@ try {
   if (savedCart) state.cart = JSON.parse(savedCart);
   const savedWishlist = localStorage.getItem('inzaish_wishlist') || localStorage.getItem('aurel_wishlist');
   if (savedWishlist) state.wishlist = JSON.parse(savedWishlist);
+  const savedOrders = localStorage.getItem('inzaish_orders');
+  if (savedOrders) state.orders = JSON.parse(savedOrders);
 } catch (e) {
   state.cart = [];
   state.wishlist = [];
+  state.orders = [];
 }
 
 function saveCart() {
@@ -35,6 +48,10 @@ function saveCart() {
 
 function saveWishlist() {
   try { localStorage.setItem('inzaish_wishlist', JSON.stringify(state.wishlist)); } catch (e) {}
+}
+
+function saveOrders() {
+  try { localStorage.setItem('inzaish_orders', JSON.stringify(state.orders)); } catch (e) {}
 }
 
 // ============================================================================
@@ -62,7 +79,7 @@ app.innerHTML = `
         <span></span>
       </button>
 
-      <a href="#" class="brand-logo" aria-label="Inzaish Collection Homepage">
+      <a href="#/" class="brand-logo" aria-label="Inzaish Collection Homepage">
         <span class="brand-logo-text">INZAISH COLLECTION</span>
         <span class="brand-tagline">Contemporary Pakistani Luxury • Karachi • Lahore • Islamabad</span>
       </a>
@@ -71,46 +88,46 @@ app.innerHTML = `
       <nav class="main-nav" id="mainNav" aria-label="Main Navigation">
         <!-- WOMEN WITH ACCESSIBLE MEGA-MENU -->
         <div class="nav-item-has-mega">
-          <button class="nav-link" id="womenNavTrigger" aria-expanded="false" aria-controls="womenMegaMenu" onclick="window.filterByHero('women-pret')">
+          <a href="#/women" class="nav-link" id="womenNavTrigger" aria-expanded="false" aria-controls="womenMegaMenu">
             Women ▾
-          </button>
+          </a>
           <div class="mega-menu-wrapper" id="womenMegaMenu" role="region" aria-label="Women's Collection Menu">
             <div class="mega-menu-inner">
               <div>
                 <h4 class="mega-col-heading">Unstitched Fabrics <span>Heirloom</span></h4>
                 <ul class="mega-links-list">
-                  <li><a href="#catalog" class="mega-link" onclick="window.filterByHero('women-unstitched');">1-Piece Shirt Lengths <span class="count">24</span></a></li>
-                  <li><a href="#catalog" class="mega-link" onclick="window.filterByHero('women-unstitched');">2-Piece Shirt &amp; Dupatta <span class="count">38</span></a></li>
-                  <li><a href="#catalog" class="mega-link" onclick="window.filterByHero('women-unstitched');">3-Piece Luxury Lawn <span class="count">42</span></a></li>
-                  <li><a href="#catalog" class="mega-link" onclick="window.filterByHero('women-unstitched');">Chikankari &amp; Schifli Editions <span class="count">18</span></a></li>
-                  <li><a href="#catalog" class="mega-link" onclick="window.filterByHero('women-unstitched');">Pure Handwoven Organza Dupattas <span class="count">14</span></a></li>
+                  <li><a href="#/unstitched" class="mega-link">1-Piece Shirt Lengths <span class="count">24</span></a></li>
+                  <li><a href="#/unstitched" class="mega-link">2-Piece Shirt &amp; Dupatta <span class="count">38</span></a></li>
+                  <li><a href="#/unstitched" class="mega-link">3-Piece Luxury Lawn <span class="count">42</span></a></li>
+                  <li><a href="#/unstitched" class="mega-link">Chikankari &amp; Schifli Editions <span class="count">18</span></a></li>
+                  <li><a href="#/unstitched" class="mega-link">Pure Handwoven Organza Dupattas <span class="count">14</span></a></li>
                 </ul>
               </div>
 
               <div>
                 <h4 class="mega-col-heading">Ready-to-Wear (Pret) <span>Contemporary</span></h4>
                 <ul class="mega-links-list">
-                  <li><a href="#catalog" class="mega-link" onclick="window.filterByHero('women-pret');">Everyday Minimalist Kurtas <span class="count">32</span></a></li>
-                  <li><a href="#catalog" class="mega-link" onclick="window.filterByHero('women-pret');">Architectural Silk Co-Ords <span class="count">16</span></a></li>
-                  <li><a href="#catalog" class="mega-link" onclick="window.filterByHero('women-pret');">Tailored Raw Silk Tunics <span class="count">21</span></a></li>
-                  <li><a href="#catalog" class="mega-link" onclick="window.filterByHero('women-pret');">Pleated Palazzo Pants &amp; Trousers <span class="count">19</span></a></li>
-                  <li><a href="#catalog" class="mega-link" onclick="window.filterByHero('festive');">Luxury Pret &amp; Evening Wear <span class="count">15</span></a></li>
+                  <li><a href="#/pret" class="mega-link">Everyday Minimalist Kurtas <span class="count">32</span></a></li>
+                  <li><a href="#/pret" class="mega-link">Architectural Silk Co-Ords <span class="count">16</span></a></li>
+                  <li><a href="#/pret" class="mega-link">Tailored Raw Silk Tunics <span class="count">21</span></a></li>
+                  <li><a href="#/pret" class="mega-link">Pleated Palazzo Pants &amp; Trousers <span class="count">19</span></a></li>
+                  <li><a href="#/festive" class="mega-link">Luxury Pret &amp; Evening Wear <span class="count">15</span></a></li>
                 </ul>
               </div>
 
               <div>
                 <h4 class="mega-col-heading">Festive &amp; Formal <span>Artisanal</span></h4>
                 <ul class="mega-links-list">
-                  <li><a href="#catalog" class="mega-link" onclick="window.filterByHero('festive');">Bridal &amp; Formal Peshwas <span class="count">08</span></a></li>
-                  <li><a href="#catalog" class="mega-link" onclick="window.filterByHero('festive');">Marori &amp; Zardozi Threadwork <span class="count">12</span></a></li>
-                  <li><a href="#catalog" class="mega-link" onclick="window.filterByHero('women-pret');">Tailored Architectural Abayas <span class="count">10</span></a></li>
-                  <li><a href="#catalog" class="mega-link" onclick="window.filterByHero('women-unstitched');">Pure Velvet &amp; Silk Shawls <span class="count">06</span></a></li>
+                  <li><a href="#/festive" class="mega-link">Bridal &amp; Formal Peshwas <span class="count">08</span></a></li>
+                  <li><a href="#/festive" class="mega-link">Marori &amp; Zardozi Threadwork <span class="count">12</span></a></li>
+                  <li><a href="#/pret" class="mega-link">Tailored Architectural Abayas <span class="count">10</span></a></li>
+                  <li><a href="#/unstitched" class="mega-link">Pure Velvet &amp; Silk Shawls <span class="count">06</span></a></li>
                   <li><a href="#textureLab" class="mega-link">Fabric Swatch Analysis (3D) <span class="count">LAB</span></a></li>
                 </ul>
               </div>
 
               <div>
-                <a href="#catalog" class="mega-campaign-card" onclick="window.openPDP('aa-w02')">
+                <a href="#/product/nur-chikankari-3pc-luxury" class="mega-campaign-card">
                   <img src="/assets/women_unstitched_luxe.jpg" alt="Nur Chikankari Collection" class="mega-campaign-img" />
                   <div class="mega-campaign-overlay"></div>
                   <div class="mega-campaign-content">
@@ -127,43 +144,43 @@ app.innerHTML = `
 
         <!-- MEN WITH ACCESSIBLE MEGA-MENU -->
         <div class="nav-item-has-mega">
-          <button class="nav-link" id="menNavTrigger" aria-expanded="false" aria-controls="menMegaMenu" onclick="window.filterByHero('men-eastern')">
+          <a href="#/men" class="nav-link" id="menNavTrigger" aria-expanded="false" aria-controls="menMegaMenu">
             Men ▾
-          </button>
+          </a>
           <div class="mega-menu-wrapper" id="menMegaMenu" role="region" aria-label="Men's Collection Menu">
             <div class="mega-menu-inner">
               <div>
                 <h4 class="mega-col-heading">Eastern Traditional <span>Bespoke</span></h4>
                 <ul class="mega-links-list">
-                  <li><a href="#catalog" class="mega-link" onclick="window.filterByHero('men-eastern');">Complete Shalwar Kameez Sets <span class="count">28</span></a></li>
-                  <li><a href="#catalog" class="mega-link" onclick="window.filterByHero('men-eastern');">Mandarin Bandhgala Kurtas <span class="count">34</span></a></li>
-                  <li><a href="#catalog" class="mega-link" onclick="window.filterByHero('men-eastern');">Egyptian Giza Liquid Cotton <span class="count">16</span></a></li>
-                  <li><a href="#catalog" class="mega-link" onclick="window.filterByHero('men-eastern');">Unstitched 4.5m Latha &amp; Karandi <span class="count">22</span></a></li>
+                  <li><a href="#/men" class="mega-link">Complete Shalwar Kameez Sets <span class="count">28</span></a></li>
+                  <li><a href="#/men" class="mega-link">Mandarin Bandhgala Kurtas <span class="count">34</span></a></li>
+                  <li><a href="#/men" class="mega-link">Egyptian Giza Liquid Cotton <span class="count">16</span></a></li>
+                  <li><a href="#/men" class="mega-link">Unstitched 4.5m Latha &amp; Karandi <span class="count">22</span></a></li>
                 </ul>
               </div>
 
               <div>
                 <h4 class="mega-col-heading">Formal Layering <span>Structure</span></h4>
                 <ul class="mega-links-list">
-                  <li><a href="#catalog" class="mega-link" onclick="window.filterByHero('men-eastern');">Tailored Raw Silk Waistcoats <span class="count">18</span></a></li>
-                  <li><a href="#catalog" class="mega-link" onclick="window.filterByHero('men-eastern');">Prince Coats &amp; Bandhgalas <span class="count">07</span></a></li>
-                  <li><a href="#catalog" class="mega-link" onclick="window.filterByHero('men-eastern');">Textured Jamawar Linings <span class="count">09</span></a></li>
-                  <li><a href="#catalog" class="mega-link" onclick="window.filterByHero('men-eastern');">Horn &amp; Antiqued Brass Buttons <span class="count">12</span></a></li>
+                  <li><a href="#/men" class="mega-link">Tailored Raw Silk Waistcoats <span class="count">18</span></a></li>
+                  <li><a href="#/men" class="mega-link">Prince Coats &amp; Bandhgalas <span class="count">07</span></a></li>
+                  <li><a href="#/men" class="mega-link">Textured Jamawar Linings <span class="count">09</span></a></li>
+                  <li><a href="#/accessories" class="mega-link">Horn &amp; Antiqued Brass Buttons <span class="count">12</span></a></li>
                 </ul>
               </div>
 
               <div>
                 <h4 class="mega-col-heading">Contemporary &amp; Objects <span>Lifestyle</span></h4>
                 <ul class="mega-links-list">
-                  <li><a href="#catalog" class="mega-link" onclick="window.filterByHero('men-eastern');">Pure Linen Relaxed Shirts <span class="count">14</span></a></li>
-                  <li><a href="#catalog" class="mega-link" onclick="window.filterByHero('men-eastern');">Supima Cotton T-Shirts <span class="count">11</span></a></li>
-                  <li><a href="#catalog" class="mega-link" onclick="window.filterByHero('men-eastern');">Extrait de Parfum (Oud &amp; Amber) <span class="count">04</span></a></li>
-                  <li><a href="#catalog" class="mega-link" onclick="window.filterByHero('men-eastern');">Handmade Leather Peshawari Chappals <span class="count">08</span></a></li>
+                  <li><a href="#/men" class="mega-link">Pure Linen Relaxed Shirts <span class="count">14</span></a></li>
+                  <li><a href="#/men" class="mega-link">Supima Cotton T-Shirts <span class="count">11</span></a></li>
+                  <li><a href="#/accessories" class="mega-link">Extrait de Parfum (Oud &amp; Amber) <span class="count">04</span></a></li>
+                  <li><a href="#/accessories" class="mega-link">Handmade Leather Peshawari Chappals <span class="count">08</span></a></li>
                 </ul>
               </div>
 
               <div>
-                <a href="#catalog" class="mega-campaign-card" onclick="window.openPDP('aa-m01')">
+                <a href="#/product/onyx-bandhgala-kurta-set" class="mega-campaign-card">
                   <img src="/assets/men_eastern_onyx.jpg" alt="The Onyx Kurta Series" class="mega-campaign-img" />
                   <div class="mega-campaign-overlay"></div>
                   <div class="mega-campaign-content">
@@ -178,22 +195,25 @@ app.innerHTML = `
           </div>
         </div>
 
-        <a href="#catalog" class="nav-link" data-filter="all">New Arrivals</a>
-        <a href="#catalog" class="nav-link" data-filter="women-unstitched">Unstitched</a>
-        <a href="#catalog" class="nav-link" data-filter="women-pret">Ready-to-Wear</a>
-        <a href="#catalog" class="nav-link" data-filter="festive">Festive / Formal</a>
+        <a href="#/new-arrivals" class="nav-link" data-filter="all">New Arrivals</a>
+        <a href="#/unstitched" class="nav-link" data-filter="women-unstitched">Unstitched</a>
+        <a href="#/pret" class="nav-link" data-filter="women-pret">Ready-to-Wear</a>
+        <a href="#/festive" class="nav-link" data-filter="festive">Festive / Formal</a>
       </nav>
 
       <div class="header-actions">
         <button class="action-btn" id="searchTriggerBtn" aria-label="Open Instant Search">
-          <span>🔍 Search</span>
+          <span>🔍 Search <kbd class="search-kbd">/</kbd></span>
         </button>
         <button class="action-btn" id="wishlistTriggerBtn" aria-label="Open Curated Wishlist">
           <span>Wishlist (<strong id="wishlistBadge">0</strong>)</span>
         </button>
-        <button class="action-btn" id="trackOrderBtn" aria-label="Track Your Order Consignment">
+        <a href="#/account" class="action-btn" id="accountNavBtn" aria-label="Client Atelier & Account">
+          <span>Atelier</span>
+        </a>
+        <a href="#/track-order" class="action-btn" id="trackOrderNavBtn" aria-label="Track Your Order Consignment">
           <span>Track</span>
-        </button>
+        </a>
         <button class="bag-btn" id="cartToggleBtn" aria-label="Open Shopping Bag">
           <span>BAG</span>
           <span class="bag-badge" id="bagBadge">0</span>
@@ -202,8 +222,10 @@ app.innerHTML = `
     </div>
   </header>
 
-  <!-- IMMERSIVE FASHION HERO SECTION -->
-  <section class="hero-section" id="heroSection">
+  <main id="mainPageContent">
+    <div id="homepageView">
+      <!-- IMMERSIVE FASHION HERO SECTION -->
+      <section class="hero-section" id="heroSection">
     <div class="hero-webgl-canvas" id="textileCanvas"></div>
     <div class="hero-overlay-gradient"></div>
 
@@ -226,13 +248,13 @@ app.innerHTML = `
 
         <!-- Dual Direct Shopping Entrypoints -->
         <div class="hero-cta-group">
-          <a href="#catalog" class="btn-hero-primary" onclick="window.filterByHero('women-pret')">
+          <a href="#/women" class="btn-hero-primary">
             <span>Explore Women</span>
-            <span class="pill-count">142 Works</span>
+            <span class="pill-count">142 Works →</span>
           </a>
-          <a href="#catalog" class="btn-hero-secondary" onclick="window.filterByHero('men-eastern')">
+          <a href="#/men" class="btn-hero-secondary">
             <span>Discover Men</span>
-            <span class="pill-count">68 Works</span>
+            <span class="pill-count">68 Works →</span>
           </a>
         </div>
 
@@ -242,7 +264,7 @@ app.innerHTML = `
             <img src="/assets/women_unstitched_luxe.jpg" alt="Nur Chikankari" class="hero-peek-thumb" />
             <div class="hero-peek-meta">
               <span class="hero-peek-label">Look 01 / Unstitched</span>
-              <span class="hero-peek-title">The "Nur" 3-Piece Chikankari</span>
+              <span class="hero-peek-title">The "Nur" Chikankari</span>
             </div>
           </div>
 
@@ -252,7 +274,17 @@ app.innerHTML = `
             <img src="/assets/men_eastern_onyx.jpg" alt="Onyx Kurta" class="hero-peek-thumb" />
             <div class="hero-peek-meta">
               <span class="hero-peek-label">Look 02 / Bespoke</span>
-              <span class="hero-peek-title">The Onyx Bandhgala Kurta</span>
+              <span class="hero-peek-title">Onyx Bandhgala Kurta</span>
+            </div>
+          </div>
+
+          <div style="width: 1px; height: 32px; background: var(--border-subtle);"></div>
+
+          <div class="hero-peek-item" onclick="window.openPDP('aa-w03')">
+            <img src="/assets/women_festive_emerald.jpg" alt="Royal Emerald Peshwas" class="hero-peek-thumb" />
+            <div class="hero-peek-meta">
+              <span class="hero-peek-label">Look 03 / Festive</span>
+              <span class="hero-peek-title">Royal Emerald Peshwas</span>
             </div>
           </div>
         </div>
@@ -287,16 +319,26 @@ app.innerHTML = `
   </section>
 
   <!-- MARQUEE STATEMENT STRIP -->
-  <div class="statement-strip">
+  <div class="statement-strip" aria-label="Brand Provenance Guarantees">
     <div class="statement-track">
       <span class="statement-item">100% Egyptian Giza Cotton</span>
+      <span class="statement-item" style="color: var(--accent-brass); opacity: 0.6;">◆</span>
       <span class="statement-item">Pure Hand-Dyed 80g Raw Silk</span>
+      <span class="statement-item" style="color: var(--accent-brass); opacity: 0.6;">◆</span>
       <span class="statement-item">Artisanal Lahore Embroidery Ateliers</span>
+      <span class="statement-item" style="color: var(--accent-brass); opacity: 0.6;">◆</span>
       <span class="statement-item">Sheer Handwoven Organza Dupattas</span>
-      <span class="statement-item">Cash On Delivery Nationwide</span>
+      <span class="statement-item" style="color: var(--accent-brass); opacity: 0.6;">◆</span>
+      <span class="statement-item">Cash On Delivery Nationwide Across 150+ Cities</span>
+      <span class="statement-item" style="color: var(--accent-brass); opacity: 0.6;">◆</span>
+      <span class="statement-item">Accurate Imperial Sizing &amp; Yardage</span>
+      <span class="statement-item" style="color: var(--accent-brass); opacity: 0.6;">◆</span>
       <span class="statement-item">100% Egyptian Giza Cotton</span>
+      <span class="statement-item" style="color: var(--accent-brass); opacity: 0.6;">◆</span>
       <span class="statement-item">Pure Hand-Dyed 80g Raw Silk</span>
+      <span class="statement-item" style="color: var(--accent-brass); opacity: 0.6;">◆</span>
       <span class="statement-item">Artisanal Lahore Embroidery Ateliers</span>
+      <span class="statement-item" style="color: var(--accent-brass); opacity: 0.6;">◆</span>
       <span class="statement-item">Sheer Handwoven Organza Dupattas</span>
     </div>
   </div>
@@ -305,10 +347,10 @@ app.innerHTML = `
   <section class="section" id="curatedDrops">
     <div class="section-header">
       <div>
-        <span class="section-eyebrow">Limited Batch Creations</span>
+        <span class="section-eyebrow">Limited Batch Creations • Lahore &amp; Sindh Looms</span>
         <h2 class="section-title">The Seasonal Edit</h2>
       </div>
-      <a href="#catalog" class="section-link">View Full Catalogue <span>→</span></a>
+      <a href="#/new-arrivals" class="section-link">View Full Archive <span>→</span></a>
     </div>
 
     <div class="drops-grid" id="curatedGrid">
@@ -318,18 +360,18 @@ app.innerHTML = `
 
   <!-- SPLIT CATEGORY PORTAL ("A Study in Contrast") -->
   <section class="split-portal">
-    <div class="portal-card" onclick="window.filterByHero('women-pret')" style="cursor: pointer;">
+    <div class="portal-card" onclick="window.location.hash='#/women'" style="cursor: pointer;" role="link" aria-label="Explore Women's Collections">
       <img src="/assets/women_pret_ivory.jpg" alt="Women's Inzaish Pret" class="portal-bg-img" />
       <div class="portal-overlay"></div>
       <div class="portal-content">
         <span class="portal-eyebrow">Contemporary Womenswear</span>
         <h3 class="portal-title">Women's Pret &amp; Unstitched</h3>
         <p class="portal-desc">Fluid organza dupattas, pure lawn threadwork, and minimalist silk co-ords engineered for modern ease.</p>
-        <span class="portal-cta">Discover Collection <span>→</span></span>
+        <span class="portal-cta">Discover Women's Edit <span>→</span></span>
       </div>
     </div>
 
-    <div class="portal-card" onclick="window.filterByHero('men-eastern')" style="cursor: pointer;">
+    <div class="portal-card" onclick="window.location.hash='#/men'" style="cursor: pointer;" role="link" aria-label="Explore Men's Collections">
       <img src="/assets/men_eastern_onyx.jpg" alt="Men's Bespoke Eastern" class="portal-bg-img" />
       <div class="portal-overlay"></div>
       <div class="portal-content">
@@ -352,11 +394,11 @@ app.innerHTML = `
 
     <div class="catalog-nav">
       <div class="filter-pills" id="filterPills">
-        <button class="filter-pill active" data-cat="all">All Works (5)</button>
-        <button class="filter-pill" data-cat="women-pret">Women's Pret (1)</button>
-        <button class="filter-pill" data-cat="women-unstitched">Unstitched 3-Pc (1)</button>
-        <button class="filter-pill" data-cat="men-eastern">Men's Eastern (2)</button>
-        <button class="filter-pill" data-cat="festive">Festive Formal (1)</button>
+        <button class="filter-pill active" data-cat="all">All Works (10)</button>
+        <button class="filter-pill" data-cat="women-pret">Women's Pret (2)</button>
+        <button class="filter-pill" data-cat="women-unstitched">Unstitched 3-Pc (2)</button>
+        <button class="filter-pill" data-cat="men-eastern">Men's Eastern (4)</button>
+        <button class="filter-pill" data-cat="festive">Festive Formal (2)</button>
       </div>
 
       <div class="catalog-sort">
@@ -413,9 +455,13 @@ app.innerHTML = `
           </button>
         </div>
 
-        <div style="font-size: 0.78rem; color: var(--text-muted); border-left: 2px solid var(--accent-brass); padding-left: 1rem;">
+        <div style="font-size: 0.78rem; color: var(--text-muted); border-left: 2px solid var(--accent-brass); padding-left: 1rem; margin-bottom: 1.5rem;">
           Guaranteed unadulterated natural fibers sourced from master looms across Sindh and Punjab.
         </div>
+
+        <button class="btn-primary" id="exploreActiveFabricBtn" style="width: auto; padding: 0.85rem 1.6rem; font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase;">
+          Explore Garments in This Fabric →
+        </button>
       </div>
     </div>
   </section>
@@ -448,6 +494,29 @@ app.innerHTML = `
       </div>
     </div>
   </section>
+    </div>
+
+    <!-- REUSABLE COLLECTION / CATEGORY VIEW CONTAINER -->
+    <div id="collectionPageView" style="display: none;"></div>
+
+    <!-- PRODUCT DETAIL PAGE VIEW CONTAINER -->
+    <div id="pdpPageView" style="display: none;"></div>
+
+    <!-- CURATED WISHLIST VIEW CONTAINER -->
+    <div id="wishlistPageView" style="display: none;"></div>
+
+    <!-- DEDICATED CHECKOUT / CART VIEW CONTAINER -->
+    <div id="checkoutPageView" style="display: none;"></div>
+
+    <!-- ORDER SUCCESS CONFIRMATION CONTAINER -->
+    <div id="orderSuccessPageView" style="display: none;"></div>
+
+    <!-- CLIENT ATELIER / ACCOUNT & ORDER HISTORY CONTAINER -->
+    <div id="accountPageView" style="display: none;"></div>
+
+    <!-- EDITORIAL INFORMATION & ATELIER POLICIES CONTAINER -->
+    <div id="infoPageView" style="display: none;"></div>
+  </main>
 
   <!-- SITE FOOTER -->
   <footer class="site-footer">
@@ -465,21 +534,23 @@ app.innerHTML = `
       <div>
         <h5 class="footer-heading">Collections</h5>
         <ul class="footer-links">
-          <li><a href="#catalog" onclick="window.filterByHero('women-pret')">Women's Ready-to-Wear</a></li>
-          <li><a href="#catalog" onclick="window.filterByHero('women-unstitched')">Unstitched 3-Piece</a></li>
-          <li><a href="#catalog" onclick="window.filterByHero('men-eastern')">Men's Kurta Sets</a></li>
-          <li><a href="#catalog" onclick="window.filterByHero('men-eastern')">Tailored Waistcoats</a></li>
-          <li><a href="#catalog" onclick="window.filterByHero('festive')">Festive Formals</a></li>
+          <li><a href="#/pret">Women's Ready-to-Wear</a></li>
+          <li><a href="#/unstitched">Unstitched 3-Piece</a></li>
+          <li><a href="#/men">Men's Kurta Sets</a></li>
+          <li><a href="#/men">Tailored Waistcoats</a></li>
+          <li><a href="#/festive">Festive Formals</a></li>
         </ul>
       </div>
 
       <div>
         <h5 class="footer-heading">Client Services</h5>
         <ul class="footer-links">
-          <li><a href="#" id="footerTrackLink">Track Your Order</a></li>
-          <li><a href="#" id="footerSizeLink">Imperial Size Guide</a></li>
-          <li><a href="#" onclick="window.openPolicyModal('shipping'); return false;">Shipping &amp; Delivery Policies</a></li>
-          <li><a href="#" onclick="window.openPolicyModal('returns'); return false;">Returns &amp; Exchanges</a></li>
+          <li><a href="#/track-order" id="footerTrackLink">Track Your Order</a></li>
+          <li><a href="#/size-guide" id="footerSizeLink">Imperial Size Guide</a></li>
+          <li><a href="#/shipping-policy">Shipping &amp; Delivery Policies</a></li>
+          <li><a href="#/returns-policy">Returns &amp; Exchanges</a></li>
+          <li><a href="#/about">About Inzaish Collection</a></li>
+          <li><a href="#/contact">Contact &amp; Flagship Boutiques</a></li>
           <li><a href="https://wa.me/923001234567" target="_blank" rel="noopener">WhatsApp Concierge (+92 300 1234567)</a></li>
         </ul>
       </div>
@@ -509,8 +580,9 @@ app.innerHTML = `
   <!-- PREDICTIVE SEARCH OVERLAY -->
   <div class="search-overlay-backdrop" id="searchOverlayBackdrop">
     <div class="search-container">
-      <div class="search-header-row">
+      <div class="search-header-row" style="position: relative;">
         <input type="text" class="search-input-box" id="searchInput" placeholder="Search unstitched, pret, silk, waistcoats..." autofocus />
+        <button class="search-clear-query-btn" id="searchClearBtn" aria-label="Clear search input" style="display: none;">✕</button>
         <button class="search-close-btn" id="searchCloseBtn" aria-label="Close search">✕</button>
       </div>
 
@@ -539,6 +611,11 @@ app.innerHTML = `
     <div class="cart-items" id="wishlistItemsList">
       <!-- Items dynamically populated -->
     </div>
+    <div style="padding: 1.25rem; border-top: 1px solid var(--border-subtle); background: var(--bg-surface);">
+      <a href="#/wishlist" id="viewFullWishlistBtn" class="btn-secondary" style="display: block; text-align: center; padding: 0.75rem; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;">
+        View Full Curated Archive Page →
+      </a>
+    </div>
   </div>
 
   <!-- REFINED RESPONSIVE MOBILE NAVIGATION DRAWER -->
@@ -563,10 +640,10 @@ app.innerHTML = `
           <span class="arrow">▾</span>
         </button>
         <div class="mobile-sub-links">
-          <a href="#catalog" class="mobile-sub-link" onclick="window.filterByHero('women-unstitched'); window.closeMobileNav();">1-Piece Shirt Lengths <span class="count">24</span></a>
-          <a href="#catalog" class="mobile-sub-link" onclick="window.filterByHero('women-unstitched'); window.closeMobileNav();">2-Piece Shirt &amp; Dupatta <span class="count">38</span></a>
-          <a href="#catalog" class="mobile-sub-link" onclick="window.filterByHero('women-unstitched'); window.closeMobileNav();">3-Piece Luxury Lawn <span class="count">42</span></a>
-          <a href="#catalog" class="mobile-sub-link" onclick="window.filterByHero('women-unstitched'); window.closeMobileNav();">Chikankari Editions <span class="count">18</span></a>
+          <a href="#/unstitched" class="mobile-sub-link" onclick="window.closeMobileNav();">1-Piece Shirt Lengths <span class="count">24</span></a>
+          <a href="#/unstitched" class="mobile-sub-link" onclick="window.closeMobileNav();">2-Piece Shirt &amp; Dupatta <span class="count">38</span></a>
+          <a href="#/unstitched" class="mobile-sub-link" onclick="window.closeMobileNav();">3-Piece Luxury Lawn <span class="count">42</span></a>
+          <a href="#/unstitched" class="mobile-sub-link" onclick="window.closeMobileNav();">Chikankari Editions <span class="count">18</span></a>
         </div>
       </div>
 
@@ -576,9 +653,9 @@ app.innerHTML = `
           <span class="arrow">▾</span>
         </button>
         <div class="mobile-sub-links">
-          <a href="#catalog" class="mobile-sub-link" onclick="window.filterByHero('women-pret'); window.closeMobileNav();">Everyday Minimalist Kurtas <span class="count">32</span></a>
-          <a href="#catalog" class="mobile-sub-link" onclick="window.filterByHero('women-pret'); window.closeMobileNav();">Architectural Silk Co-Ords <span class="count">16</span></a>
-          <a href="#catalog" class="mobile-sub-link" onclick="window.filterByHero('women-pret'); window.closeMobileNav();">Tailored Tunics &amp; Palazzos <span class="count">21</span></a>
+          <a href="#/pret" class="mobile-sub-link" onclick="window.closeMobileNav();">Everyday Minimalist Kurtas <span class="count">32</span></a>
+          <a href="#/pret" class="mobile-sub-link" onclick="window.closeMobileNav();">Architectural Silk Co-Ords <span class="count">16</span></a>
+          <a href="#/pret" class="mobile-sub-link" onclick="window.closeMobileNav();">Tailored Tunics &amp; Palazzos <span class="count">21</span></a>
         </div>
       </div>
 
@@ -588,8 +665,8 @@ app.innerHTML = `
           <span class="arrow">▾</span>
         </button>
         <div class="mobile-sub-links">
-          <a href="#catalog" class="mobile-sub-link" onclick="window.filterByHero('festive'); window.closeMobileNav();">Bridal &amp; Formal Peshwas <span class="count">08</span></a>
-          <a href="#catalog" class="mobile-sub-link" onclick="window.filterByHero('festive'); window.closeMobileNav();">Pure Zardozi Net Dupattas <span class="count">12</span></a>
+          <a href="#/festive" class="mobile-sub-link" onclick="window.closeMobileNav();">Bridal &amp; Formal Peshwas <span class="count">08</span></a>
+          <a href="#/festive" class="mobile-sub-link" onclick="window.closeMobileNav();">Pure Zardozi Net Dupattas <span class="count">12</span></a>
         </div>
       </div>
     </div>
@@ -602,9 +679,9 @@ app.innerHTML = `
           <span class="arrow">▾</span>
         </button>
         <div class="mobile-sub-links">
-          <a href="#catalog" class="mobile-sub-link" onclick="window.filterByHero('men-eastern'); window.closeMobileNav();">Complete Shalwar Kameez Sets <span class="count">28</span></a>
-          <a href="#catalog" class="mobile-sub-link" onclick="window.filterByHero('men-eastern'); window.closeMobileNav();">Mandarin Bandhgala Kurtas <span class="count">34</span></a>
-          <a href="#catalog" class="mobile-sub-link" onclick="window.filterByHero('men-eastern'); window.closeMobileNav();">Egyptian Giza Liquid Cotton <span class="count">16</span></a>
+          <a href="#/men" class="mobile-sub-link" onclick="window.closeMobileNav();">Complete Shalwar Kameez Sets <span class="count">28</span></a>
+          <a href="#/men" class="mobile-sub-link" onclick="window.closeMobileNav();">Mandarin Bandhgala Kurtas <span class="count">34</span></a>
+          <a href="#/men" class="mobile-sub-link" onclick="window.closeMobileNav();">Egyptian Giza Liquid Cotton <span class="count">16</span></a>
         </div>
       </div>
 
@@ -614,8 +691,8 @@ app.innerHTML = `
           <span class="arrow">▾</span>
         </button>
         <div class="mobile-sub-links">
-          <a href="#catalog" class="mobile-sub-link" onclick="window.filterByHero('men-eastern'); window.closeMobileNav();">Raw Silk Tailored Waistcoats <span class="count">18</span></a>
-          <a href="#catalog" class="mobile-sub-link" onclick="window.filterByHero('men-eastern'); window.closeMobileNav();">Prince Coats &amp; Suiting <span class="count">07</span></a>
+          <a href="#/men" class="mobile-sub-link" onclick="window.closeMobileNav();">Raw Silk Tailored Waistcoats <span class="count">18</span></a>
+          <a href="#/men" class="mobile-sub-link" onclick="window.closeMobileNav();">Prince Coats &amp; Suiting <span class="count">07</span></a>
         </div>
       </div>
     </div>
@@ -952,32 +1029,38 @@ function updateWishlistUI() {
   if (countHeader) countHeader.textContent = state.wishlist.length;
 
   const list = document.getElementById('wishlistItemsList');
-  if (!list) return;
-
-  if (state.wishlist.length === 0) {
-    list.innerHTML = `
-      <div style="text-align: center; padding: 4rem 1rem; color: var(--text-muted);">
-        <span style="font-size: 2rem; display: block; margin-bottom: 0.5rem;">♡</span>
-        <p style="font-family: var(--font-serif); font-size: 1.25rem; color: var(--text-primary); margin-bottom: 0.5rem;">No Saved Garments</p>
-        <p style="font-size: 0.82rem;">Click the heart icon on any piece to curate your private collection.</p>
-      </div>
-    `;
-  } else {
-    const savedProducts = PRODUCTS.filter(p => state.wishlist.includes(p.id));
-    list.innerHTML = savedProducts.map(p => `
-      <div class="cart-item">
-        <img src="${p.image}" alt="${p.title}" class="cart-item-img" />
-        <div class="cart-item-info">
-          <h4 class="cart-item-title">${p.title}</h4>
-          <span class="cart-item-meta">${p.tag} • ${p.pieceCount}</span>
-          <span class="cart-item-price">${p.priceFormatted}</span>
-          <button class="btn-primary" style="padding: 0.45rem 0.85rem; font-size: 0.68rem; margin-top: 0.5rem; width: fit-content;" onclick="window.moveWishlistToCart('${p.id}')">
-            Move to Bag
-          </button>
+  if (list) {
+    if (state.wishlist.length === 0) {
+      list.innerHTML = `
+        <div style="text-align: center; padding: 4rem 1rem; color: var(--text-muted);">
+          <span style="font-size: 2rem; display: block; margin-bottom: 0.5rem;">♡</span>
+          <p style="font-family: var(--font-serif); font-size: 1.25rem; color: var(--text-primary); margin-bottom: 0.5rem;">No Saved Garments</p>
+          <p style="font-size: 0.82rem;">Click the heart icon on any piece to curate your private collection.</p>
         </div>
-        <button style="color: var(--text-muted); font-size: 1.1rem; padding: 0.5rem;" onclick="window.toggleWishlist('${p.id}')">✕</button>
-      </div>
-    `).join('');
+      `;
+    } else {
+      const savedProducts = PRODUCTS.filter(p => state.wishlist.includes(p.id));
+      list.innerHTML = savedProducts.map(p => `
+        <div class="cart-item">
+          <img src="${p.image}" alt="${p.title}" class="cart-item-img" />
+          <div class="cart-item-info">
+            <h4 class="cart-item-title">${p.title}</h4>
+            <span class="cart-item-meta">${p.tag} • ${p.pieceCount}</span>
+            <span class="cart-item-price">${p.priceFormatted}</span>
+            <button class="btn-primary" style="padding: 0.45rem 0.85rem; font-size: 0.68rem; margin-top: 0.5rem; width: fit-content;" onclick="window.moveWishlistToCart('${p.id}')">
+              Move to Bag
+            </button>
+          </div>
+          <button style="color: var(--text-muted); font-size: 1.1rem; padding: 0.5rem;" onclick="window.toggleWishlist('${p.id}')">✕</button>
+        </div>
+      `).join('');
+    }
+  }
+
+  // If full wishlist page is currently visible, refresh its view
+  const wishlistPageView = document.getElementById('wishlistPageView');
+  if (wishlistPageView && wishlistPageView.style.display === 'block' && window.refreshWishlistPage) {
+    window.refreshWishlistPage();
   }
 }
 
@@ -986,28 +1069,30 @@ window.moveWishlistToCart = function(productId) {
   if (!product) return;
   addToCart(product, product.sizes[0] ? product.sizes[0].name : 'Standard');
   window.toggleWishlist(productId);
-  document.getElementById('wishlistDrawer').classList.remove('active');
-  document.getElementById('wishlistBackdrop').classList.remove('active');
+  document.getElementById('wishlistDrawer')?.classList.remove('active');
+  document.getElementById('wishlistBackdrop')?.classList.remove('active');
   openCart();
 };
 
 // ============================================================================
-// PREDICTIVE SEARCH LOGIC
+// PREDICTIVE SEARCH LOGIC WITH HOTKEYS & SUBSTRING HIGHLIGHTING
 // ============================================================================
 function initSearch() {
   const overlay = document.getElementById('searchOverlayBackdrop');
   const input = document.getElementById('searchInput');
+  const clearBtn = document.getElementById('searchClearBtn');
   const resultsGrid = document.getElementById('searchResultsGrid');
   const trigger = document.getElementById('searchTriggerBtn');
   const closeBtn = document.getElementById('searchCloseBtn');
 
   const openSearch = () => {
     overlay.classList.add('active');
-    setTimeout(() => input.focus(), 150);
+    setTimeout(() => input.focus(), 120);
   };
   const closeSearch = () => {
     overlay.classList.remove('active');
     input.value = '';
+    if (clearBtn) clearBtn.style.display = 'none';
     resultsGrid.innerHTML = '';
   };
 
@@ -1015,30 +1100,73 @@ function initSearch() {
   closeBtn.onclick = closeSearch;
   overlay.onclick = (e) => { if (e.target === overlay) closeSearch(); };
 
+  // Keyboard shortcut '/' to trigger search
+  window.addEventListener('keydown', (e) => {
+    if (e.key === '/' && !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) {
+      e.preventDefault();
+      openSearch();
+    }
+  });
+
+  // Clear query button handler
+  if (clearBtn) {
+    clearBtn.onclick = () => {
+      input.value = '';
+      clearBtn.style.display = 'none';
+      resultsGrid.innerHTML = '';
+      input.focus();
+    };
+  }
+
+  function highlightMatches(text, query) {
+    if (!query) return text;
+    const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`(${escaped})`, 'gi');
+    return text.replace(regex, '<mark class="search-highlight">$1</mark>');
+  }
+
   input.addEventListener('input', (e) => {
     const q = e.target.value.trim().toLowerCase();
+    if (clearBtn) clearBtn.style.display = q ? 'block' : 'none';
+
     if (!q) {
       resultsGrid.innerHTML = '';
       return;
     }
+
     const matches = PRODUCTS.filter(p =>
       p.title.toLowerCase().includes(q) ||
       p.fabric.toLowerCase().includes(q) ||
       p.collection.toLowerCase().includes(q) ||
       p.categoryName.toLowerCase().includes(q) ||
-      p.tag.toLowerCase().includes(q)
+      p.tag.toLowerCase().includes(q) ||
+      p.description.toLowerCase().includes(q)
     );
 
     if (matches.length === 0) {
-      resultsGrid.innerHTML = `<p style="grid-column: 1/-1; color: #BBB; font-style: italic;">No Inzaish Collection pieces matched "${q}". Try "Lawn", "Silk", "Kurta", or "Waistcoat".</p>`;
+      resultsGrid.innerHTML = `
+        <div style="grid-column: 1/-1; text-align: center; padding: 2.5rem 1rem; color: #BBB;">
+          <span style="font-size: 1.8rem; display: block; margin-bottom: 0.5rem; color: var(--accent-brass);">❖</span>
+          <p style="font-family: var(--font-serif); font-size: 1.3rem; color: #FFF; margin-bottom: 0.35rem;">
+            No Silhouettes Matched "${e.target.value.trim()}"
+          </p>
+          <p style="font-size: 0.82rem; color: #888;">
+            Try exploring popular curations: "Chikankari", "Raw Silk", "Bandhgala", "Lawn", or "Waistcoat".
+          </p>
+        </div>
+      `;
     } else {
       resultsGrid.innerHTML = matches.map(p => `
-        <div style="background: rgba(255,255,255,0.06); padding: 1rem; border: 1px solid rgba(255,255,255,0.12); border-radius: 2px; cursor: pointer;" onclick="window.selectSearchResult('${p.id}')">
-          <img src="${p.image}" alt="${p.title}" style="width: 100%; aspect-ratio: 3/4; object-fit: cover; margin-bottom: 0.75rem;" />
-          <span style="font-size: 0.65rem; color: var(--accent-brass); text-transform: uppercase;">${p.collection}</span>
-          <h4 style="font-family: var(--font-serif); font-size: 1.1rem; color: #FFF; margin: 0.25rem 0;">${p.title}</h4>
-          <span style="font-weight: 600; color: #DDD;">${p.priceFormatted}</span>
-        </div>
+        <article class="search-result-card" onclick="window.selectSearchResult('${p.id}')">
+          <img src="${p.image}" alt="${p.title}" class="search-result-thumb" loading="lazy" />
+          <span class="search-result-collection">${p.collection} • ${p.pieceCount}</span>
+          <h4 class="search-result-title">${highlightMatches(p.title, q)}</h4>
+          <p class="search-result-meta">${highlightMatches(p.fabric, q)}</p>
+          <div class="search-result-footer">
+            <span class="search-result-price">${p.priceFormatted}</span>
+            <span class="search-result-cta">Inspect Piece →</span>
+          </div>
+        </article>
       `).join('');
     }
   });
@@ -1055,10 +1183,16 @@ function initSearch() {
 }
 
 // ============================================================================
-// PDP (PRODUCT DETAIL OVERLAY)
+// PDP ROUTING & QUICK MODAL
 // ============================================================================
 window.openPDP = function(productId) {
-  const product = PRODUCTS.find(p => p.id === productId);
+  const product = PRODUCTS.find(p => p.id === productId || p.slug === productId);
+  if (!product) return;
+  window.location.hash = `#/product/${product.slug || product.id}`;
+};
+
+window.openQuickModal = function(productId) {
+  const product = PRODUCTS.find(p => p.id === productId || p.slug === productId);
   if (!product) return;
 
   state.selectedProduct = product;
@@ -1130,6 +1264,12 @@ window.openPDP = function(productId) {
 
   document.getElementById('pdpCloseBtn').onclick = () => {
     document.getElementById('pdpBackdrop').classList.remove('active');
+  };
+
+  document.getElementById('pdpBackdrop').onclick = (e) => {
+    if (e.target === document.getElementById('pdpBackdrop')) {
+      document.getElementById('pdpBackdrop').classList.remove('active');
+    }
   };
 
   document.getElementById('pdpSizeGuideTrigger').onclick = () => {
@@ -1366,6 +1506,578 @@ document.addEventListener('DOMContentLoaded', () => {
   renderCatalog();
   updateCartUI();
 
+  // Client-Side Collection View Engine with Multi-Faceted Filtering
+  function loadCollectionRoute(routeKey, subcategory = 'all', fabric = 'all', priceTier = 'all', sort = 'featured') {
+    const homepageView = document.getElementById('homepageView');
+    const collectionPageView = document.getElementById('collectionPageView');
+    const pdpPageView = document.getElementById('pdpPageView');
+    const wishlistPageView = document.getElementById('wishlistPageView');
+    const checkoutPageView = document.getElementById('checkoutPageView');
+    const orderSuccessPageView = document.getElementById('orderSuccessPageView');
+    const accountPageView = document.getElementById('accountPageView');
+    const infoPageView = document.getElementById('infoPageView');
+    if (!collectionPageView) return;
+
+    if (homepageView) homepageView.style.display = 'none';
+    if (pdpPageView) pdpPageView.style.display = 'none';
+    if (wishlistPageView) wishlistPageView.style.display = 'none';
+    if (checkoutPageView) checkoutPageView.style.display = 'none';
+    if (orderSuccessPageView) orderSuccessPageView.style.display = 'none';
+    if (accountPageView) accountPageView.style.display = 'none';
+    if (infoPageView) infoPageView.style.display = 'none';
+    collectionPageView.style.display = 'block';
+
+    // 1. Determine base products & metadata for category
+    let baseList = [];
+    let meta = {
+      title: "Collection Archive",
+      eyebrow: "Heirloom Craft & Modern Restraint",
+      description: "Curated Pakistani luxury garments woven on master looms with uncompromised textile integrity.",
+      breadcrumbs: ['Home', 'Collections'],
+      subcategories: [{ id: 'all', name: 'All Works' }]
+    };
+
+    if (routeKey === 'women') {
+      baseList = PRODUCTS.filter(p => ['women-pret', 'women-unstitched', 'festive'].includes(p.category));
+      meta = {
+        title: "Women's Collection",
+        eyebrow: "Heirloom Weaves & Contemporary Silhouettes",
+        description: "Explore pure unstitched luxury lawn, tailored raw silk co-ords, and artisanal festive couture engineered for effortless elegance.",
+        breadcrumbs: ['Home', 'Women'],
+        subcategories: [
+          { id: 'all', name: 'All Women', count: baseList.length },
+          { id: 'women-unstitched', name: 'Unstitched 3-Pc', count: PRODUCTS.filter(p => p.category === 'women-unstitched').length },
+          { id: 'women-pret', name: 'Ready-to-Wear (Pret)', count: PRODUCTS.filter(p => p.category === 'women-pret').length },
+          { id: 'festive', name: 'Festive & Formal', count: PRODUCTS.filter(p => p.category === 'festive').length }
+        ]
+      };
+    } else if (routeKey === 'men') {
+      baseList = PRODUCTS.filter(p => p.category === 'men-eastern');
+      meta = {
+        title: "Bespoke Eastern Menswear",
+        eyebrow: "100% Egyptian Giza Cotton & Structured Tailoring",
+        description: "Mandarin bandhgala kurta sets, tailored textured raw silk waistcoats, and liquid-finished Egyptian cotton suiting cut with architectural precision.",
+        breadcrumbs: ['Home', 'Men'],
+        subcategories: [
+          { id: 'all', name: 'All Menswear', count: baseList.length },
+          { id: 'kurtas', name: 'Kurta & Shalwar Kameez', count: baseList.filter(p => p.pieceCount.includes('Set')).length },
+          { id: 'waistcoats', name: 'Tailored Waistcoats', count: baseList.filter(p => p.tag.toLowerCase().includes('waistcoat')).length }
+        ]
+      };
+    } else if (routeKey === 'unstitched') {
+      baseList = PRODUCTS.filter(p => p.category === 'women-unstitched');
+      meta = {
+        title: "Heirloom Unstitched Fabrics",
+        eyebrow: "Pure Combed Lawn & Handwoven Organza Dupattas",
+        description: "Generous 3-piece yardage (3.25m Shirt, 2.5m Dupatta, 2.5m Trouser) enriched with intricate chikankari needlework, schifli borders, and zari accents.",
+        breadcrumbs: ['Home', 'Women', 'Unstitched'],
+        subcategories: [
+          { id: 'all', name: 'All Unstitched', count: baseList.length }
+        ]
+      };
+    } else if (routeKey === 'pret') {
+      baseList = PRODUCTS.filter(p => p.category === 'women-pret');
+      meta = {
+        title: "Ready-to-Wear (Pret)",
+        eyebrow: "Architectural South Asian Minimalism",
+        description: "Impeccably finished raw silk tunics, dropped-shoulder boxy silhouettes, and cigarette trousers crafted for effortless quiet luxury.",
+        breadcrumbs: ['Home', 'Women', 'Ready-to-Wear'],
+        subcategories: [
+          { id: 'all', name: 'All Pret', count: baseList.length }
+        ]
+      };
+    } else if (routeKey === 'festive') {
+      baseList = PRODUCTS.filter(p => p.category === 'festive');
+      meta = {
+        title: "Festive & Formal Couture",
+        eyebrow: "Atelier Embroidery & Heirloom Silks",
+        description: "Hand-embellished zardozi threadwork, 16-kali flared peshwas ensembles, micro pearls, and regal 9000 micro velvet shawls for weddings and festive celebrations.",
+        breadcrumbs: ['Home', 'Collections', 'Festive'],
+        subcategories: [
+          { id: 'all', name: 'All Festive', count: baseList.length }
+        ]
+      };
+    } else if (routeKey === 'new-arrivals') {
+      baseList = [...PRODUCTS];
+      meta = {
+        title: "New Arrivals Archive",
+        eyebrow: "Autumn/Winter 25/26 Releases",
+        description: "The latest seasonal curations, limited batch releases, and newly finished master loom creations from our ateliers.",
+        breadcrumbs: ['Home', 'New Arrivals'],
+        subcategories: [
+          { id: 'all', name: 'All Releases', count: baseList.length }
+        ]
+      };
+    } else if (routeKey === 'accessories') {
+      baseList = PRODUCTS.filter(p => p.tag.toLowerCase().includes('waistcoat') || p.tag.toLowerCase().includes('velvet'));
+      meta = {
+        title: "Objects & Layering",
+        eyebrow: "Bespoke Waistcoats & Artisanal Shawls",
+        description: "Textured jamawar waistcoats and micro velvet shawls engineered to layer over eastern ensembles.",
+        breadcrumbs: ['Home', 'Accessories'],
+        subcategories: [
+          { id: 'all', name: 'All Objects', count: baseList.length }
+        ]
+      };
+    } else if (routeKey === 'sale') {
+      baseList = PRODUCTS.slice(0, 3);
+      meta = {
+        title: "Archive Clearances",
+        eyebrow: "Limited Batch Final Pieces",
+        description: "Selected archival garments from past edits with transparent discounted pricing and uncompromised craftsmanship.",
+        breadcrumbs: ['Home', 'Archive Sale'],
+        subcategories: [
+          { id: 'all', name: 'Final Pieces', count: baseList.length }
+        ]
+      };
+    }
+
+    // 2. Apply Subcategory Filter
+    let filtered = [...baseList];
+    if (subcategory !== 'all') {
+      if (routeKey === 'women') {
+        filtered = filtered.filter(p => p.category === subcategory);
+      } else if (routeKey === 'men') {
+        if (subcategory === 'kurtas') filtered = filtered.filter(p => p.pieceCount.includes('Set'));
+        else if (subcategory === 'waistcoats') filtered = filtered.filter(p => p.tag.toLowerCase().includes('waistcoat'));
+      }
+    }
+
+    // 3. Apply Fabric Weave Filter
+    if (fabric !== 'all') {
+      if (fabric === 'raw-silk') filtered = filtered.filter(p => p.fabric.toLowerCase().includes('raw silk'));
+      else if (fabric === 'lawn') filtered = filtered.filter(p => p.fabric.toLowerCase().includes('lawn') || p.fabric.toLowerCase().includes('chikan'));
+      else if (fabric === 'cotton') filtered = filtered.filter(p => p.fabric.toLowerCase().includes('cotton') || p.fabric.toLowerCase().includes('giza'));
+      else if (fabric === 'organza') filtered = filtered.filter(p => p.fabric.toLowerCase().includes('organza'));
+      else if (fabric === 'velvet') filtered = filtered.filter(p => p.fabric.toLowerCase().includes('velvet') || p.fabric.toLowerCase().includes('karandi'));
+    }
+
+    // 4. Apply Price Tier Filter
+    if (priceTier !== 'all') {
+      if (priceTier === 'under-10k') filtered = filtered.filter(p => p.price < 10000);
+      else if (priceTier === '10k-18k') filtered = filtered.filter(p => p.price >= 10000 && p.price <= 18000);
+      else if (priceTier === 'above-18k') filtered = filtered.filter(p => p.price > 18000);
+    }
+
+    // 5. Apply Sorting
+    if (sort === 'price-low') {
+      filtered.sort((a, b) => a.price - b.price);
+    } else if (sort === 'price-high') {
+      filtered.sort((a, b) => b.price - a.price);
+    } else if (sort === 'newest') {
+      filtered.sort((a, b) => b.id.localeCompare(a.id));
+    }
+
+    const config = {
+      ...meta,
+      activeSubcategory: subcategory,
+      activeFabric: fabric,
+      activePriceTier: priceTier,
+      activeSort: sort,
+      allCategoryProducts: baseList,
+      products: filtered,
+      wishlist: state.wishlist,
+      onSubcategoryChange: (subId) => loadCollectionRoute(routeKey, subId, fabric, priceTier, sort),
+      onFabricChange: (newFabric) => loadCollectionRoute(routeKey, subcategory, newFabric, priceTier, sort),
+      onPriceTierChange: (newPrice) => loadCollectionRoute(routeKey, subcategory, fabric, newPrice, sort),
+      onSortChange: (newSort) => loadCollectionRoute(routeKey, subcategory, fabric, priceTier, newSort),
+      onClearFilters: () => loadCollectionRoute(routeKey, 'all', 'all', 'all', 'featured'),
+      onProductClick: (id) => window.openPDP(id),
+      onWishlistToggle: (id) => window.toggleWishlist(id)
+    };
+
+    renderCollectionView(collectionPageView, config);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Dedicated Product Detail Page (PDP) View Engine
+  function loadPDPRoute(slug) {
+    const homepageView = document.getElementById('homepageView');
+    const collectionPageView = document.getElementById('collectionPageView');
+    const pdpPageView = document.getElementById('pdpPageView');
+    const wishlistPageView = document.getElementById('wishlistPageView');
+    const checkoutPageView = document.getElementById('checkoutPageView');
+    const orderSuccessPageView = document.getElementById('orderSuccessPageView');
+    const accountPageView = document.getElementById('accountPageView');
+    const infoPageView = document.getElementById('infoPageView');
+    if (!pdpPageView) return;
+
+    const product = PRODUCTS.find(p => p.slug === slug || p.id === slug) || PRODUCTS[0];
+    if (!product) return;
+
+    if (homepageView) homepageView.style.display = 'none';
+    if (collectionPageView) collectionPageView.style.display = 'none';
+    if (wishlistPageView) wishlistPageView.style.display = 'none';
+    if (checkoutPageView) checkoutPageView.style.display = 'none';
+    if (orderSuccessPageView) orderSuccessPageView.style.display = 'none';
+    if (accountPageView) accountPageView.style.display = 'none';
+    if (infoPageView) infoPageView.style.display = 'none';
+    pdpPageView.style.display = 'block';
+
+    const isWishlisted = state.wishlist.includes(product.id);
+
+    renderProductDetailPage(pdpPageView, product, {
+      selectedSize: product.sizes && product.sizes[0] ? product.sizes[0].name : 'Standard',
+      selectedQty: 1,
+      isWishlisted: isWishlisted,
+      onAddToCart: (prod, size, qty) => {
+        for (let i = 0; i < qty; i++) {
+          addToCart(prod, size);
+        }
+        openCart();
+        window.showToast(`${prod.title} (${size}) added to bag.`);
+      },
+      onToggleWishlist: (id) => {
+        window.toggleWishlist(id);
+        const btn = pdpPageView.querySelector('#pdpWishlistBtn');
+        if (btn) {
+          const nowWish = state.wishlist.includes(id);
+          btn.classList.toggle('active', nowWish);
+          btn.innerHTML = nowWish ? '♥ Saved to Wishlist' : '♡ Save to Wishlist';
+        }
+      },
+      onOpenSizeGuide: (prod) => {
+        alert(`Inzaish Collection Size Specifications for ${prod.title}:\n\n` +
+          prod.sizes.map(s => `${s.name}: Chest ${s.chest || 'N/A'}, Length ${s.length || 'N/A'}`).join('\n') +
+          '\n\nMeasurement Standard: Imperial Inches. Verified Pakistani luxury atelier sizing.');
+      },
+      onOpen3DLab: (fabricKey) => {
+        window.location.hash = '#/';
+        setTimeout(() => {
+          const el = document.getElementById('textureLab');
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+          if (window.switchAtelierFabric && fabricKey) {
+            window.switchAtelierFabric(fabricKey);
+          }
+        }, 150);
+      }
+    });
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Dedicated Editorial Wishlist View Engine
+  function loadWishlistRoute() {
+    const homepageView = document.getElementById('homepageView');
+    const collectionPageView = document.getElementById('collectionPageView');
+    const pdpPageView = document.getElementById('pdpPageView');
+    const wishlistPageView = document.getElementById('wishlistPageView');
+    const checkoutPageView = document.getElementById('checkoutPageView');
+    const orderSuccessPageView = document.getElementById('orderSuccessPageView');
+    const accountPageView = document.getElementById('accountPageView');
+    const infoPageView = document.getElementById('infoPageView');
+    if (!wishlistPageView) return;
+
+    if (homepageView) homepageView.style.display = 'none';
+    if (collectionPageView) collectionPageView.style.display = 'none';
+    if (pdpPageView) pdpPageView.style.display = 'none';
+    if (checkoutPageView) checkoutPageView.style.display = 'none';
+    if (orderSuccessPageView) orderSuccessPageView.style.display = 'none';
+    if (accountPageView) accountPageView.style.display = 'none';
+    if (infoPageView) infoPageView.style.display = 'none';
+    wishlistPageView.style.display = 'block';
+
+    renderWishlistPage(wishlistPageView, state.wishlist, PRODUCTS, {
+      onMoveToCart: (id) => {
+        window.moveWishlistToCart(id);
+      },
+      onRemoveFromWishlist: (id) => {
+        window.toggleWishlist(id);
+      },
+      onMoveAllToCart: (productsList) => {
+        productsList.forEach(p => {
+          addToCart(p, p.sizes && p.sizes[0] ? p.sizes[0].name : 'Standard');
+        });
+        state.wishlist = [];
+        saveWishlist();
+        updateWishlistUI();
+        openCart();
+        window.showToast('All saved pieces moved to shopping bag.');
+      },
+      onProductClick: (slug) => {
+        window.location.hash = `#/product/${slug}`;
+      }
+    });
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  window.refreshWishlistPage = loadWishlistRoute;
+
+  // Dedicated Express Checkout View Engine
+  function loadCheckoutRoute() {
+    const homepageView = document.getElementById('homepageView');
+    const collectionPageView = document.getElementById('collectionPageView');
+    const pdpPageView = document.getElementById('pdpPageView');
+    const wishlistPageView = document.getElementById('wishlistPageView');
+    const checkoutPageView = document.getElementById('checkoutPageView');
+    const orderSuccessPageView = document.getElementById('orderSuccessPageView');
+    const accountPageView = document.getElementById('accountPageView');
+    const infoPageView = document.getElementById('infoPageView');
+    if (!checkoutPageView) return;
+
+    if (homepageView) homepageView.style.display = 'none';
+    if (collectionPageView) collectionPageView.style.display = 'none';
+    if (pdpPageView) pdpPageView.style.display = 'none';
+    if (wishlistPageView) wishlistPageView.style.display = 'none';
+    if (orderSuccessPageView) orderSuccessPageView.style.display = 'none';
+    if (accountPageView) accountPageView.style.display = 'none';
+    if (infoPageView) infoPageView.style.display = 'none';
+    checkoutPageView.style.display = 'block';
+
+    renderCheckoutPage(checkoutPageView, state.cart, {
+      appliedCoupon: state.appliedCoupon,
+      formData: state.checkoutFormData || {},
+      onApplyCoupon: (code, currentValues) => {
+        if (currentValues) state.checkoutFormData = currentValues;
+        if (code === 'INZAISH10' || code === 'FREESHIP') {
+          state.appliedCoupon = code;
+          window.showToast(`Privilege code "${code}" applied.`);
+          loadCheckoutRoute();
+        } else {
+          window.showToast('Invalid coupon code. Try "INZAISH10".');
+        }
+      },
+      onPlaceOrder: (orderData) => {
+        state.lastOrder = orderData;
+        state.checkoutFormData = {};
+        if (!state.orders) state.orders = [];
+        state.orders.unshift(orderData);
+        saveOrders();
+        state.cart = [];
+        state.appliedCoupon = null;
+        saveCart();
+        updateCartUI();
+        window.location.hash = '#/order-success';
+      },
+      onNavigateHome: () => {
+        window.location.hash = '#/';
+      }
+    });
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Dedicated Order Success View Engine
+  function loadOrderSuccessRoute() {
+    const homepageView = document.getElementById('homepageView');
+    const collectionPageView = document.getElementById('collectionPageView');
+    const pdpPageView = document.getElementById('pdpPageView');
+    const wishlistPageView = document.getElementById('wishlistPageView');
+    const checkoutPageView = document.getElementById('checkoutPageView');
+    const orderSuccessPageView = document.getElementById('orderSuccessPageView');
+    const accountPageView = document.getElementById('accountPageView');
+    const infoPageView = document.getElementById('infoPageView');
+    if (!orderSuccessPageView) return;
+
+    if (homepageView) homepageView.style.display = 'none';
+    if (collectionPageView) collectionPageView.style.display = 'none';
+    if (pdpPageView) pdpPageView.style.display = 'none';
+    if (wishlistPageView) wishlistPageView.style.display = 'none';
+    if (checkoutPageView) checkoutPageView.style.display = 'none';
+    if (accountPageView) accountPageView.style.display = 'none';
+    if (infoPageView) infoPageView.style.display = 'none';
+    orderSuccessPageView.style.display = 'block';
+
+    const orderData = state.lastOrder || (state.orders && state.orders[0]) || {
+      orderId: 'IC-2026-891',
+      date: new Date().toLocaleDateString('en-PK', { day: 'numeric', month: 'short', year: 'numeric' }),
+      customerName: 'Ahmad Khan',
+      phone: '0300 1234567',
+      address: 'House 42, Street 8, Phase 5, DHA',
+      city: 'Lahore',
+      paymentMethodTitle: 'Cash on Delivery (COD)',
+      items: [PRODUCTS[0]],
+      total: 14500
+    };
+
+    renderOrderSuccessPage(orderSuccessPageView, orderData, {
+      onContinueShopping: () => {
+        window.location.hash = '#/';
+      },
+      onTrackOrder: (orderId) => {
+        window.location.hash = '#/track-order';
+      }
+    });
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Dedicated Client Atelier (Account, Orders & Consignment Tracking) View Engine
+  function loadAccountRoute(tab = 'orders') {
+    const homepageView = document.getElementById('homepageView');
+    const collectionPageView = document.getElementById('collectionPageView');
+    const pdpPageView = document.getElementById('pdpPageView');
+    const wishlistPageView = document.getElementById('wishlistPageView');
+    const checkoutPageView = document.getElementById('checkoutPageView');
+    const orderSuccessPageView = document.getElementById('orderSuccessPageView');
+    const accountPageView = document.getElementById('accountPageView');
+    const infoPageView = document.getElementById('infoPageView');
+    if (!accountPageView) return;
+
+    if (homepageView) homepageView.style.display = 'none';
+    if (collectionPageView) collectionPageView.style.display = 'none';
+    if (pdpPageView) pdpPageView.style.display = 'none';
+    if (wishlistPageView) wishlistPageView.style.display = 'none';
+    if (checkoutPageView) checkoutPageView.style.display = 'none';
+    if (orderSuccessPageView) orderSuccessPageView.style.display = 'none';
+    if (infoPageView) infoPageView.style.display = 'none';
+    accountPageView.style.display = 'block';
+
+    renderAccountPage(accountPageView, state, {
+      activeTab: tab,
+      onSelectTab: (t) => {},
+      onTrackOrder: (query) => {
+        window.showToast(`Consignment telemetry located for "${query}".`);
+      },
+      onReorderItems: (items) => {
+        items.forEach(item => {
+          addToCart(item, item.size || 'Standard');
+        });
+        openCart();
+        window.showToast(`${items.length} archival piece(s) added back to your bag.`);
+      },
+      onSaveMeasurements: (m) => {
+        window.showToast('Imperial tailoring measurements preserved.');
+      },
+      onSaveAddress: (addr) => {
+        window.showToast('Primary Pakistani delivery address updated.');
+      }
+    });
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Dedicated Editorial Information & Policy Pages View Engine
+  function loadInfoRoute(pageKey = 'about') {
+    const homepageView = document.getElementById('homepageView');
+    const collectionPageView = document.getElementById('collectionPageView');
+    const pdpPageView = document.getElementById('pdpPageView');
+    const wishlistPageView = document.getElementById('wishlistPageView');
+    const checkoutPageView = document.getElementById('checkoutPageView');
+    const orderSuccessPageView = document.getElementById('orderSuccessPageView');
+    const accountPageView = document.getElementById('accountPageView');
+    const infoPageView = document.getElementById('infoPageView');
+    if (!infoPageView) return;
+
+    if (homepageView) homepageView.style.display = 'none';
+    if (collectionPageView) collectionPageView.style.display = 'none';
+    if (pdpPageView) pdpPageView.style.display = 'none';
+    if (wishlistPageView) wishlistPageView.style.display = 'none';
+    if (checkoutPageView) checkoutPageView.style.display = 'none';
+    if (orderSuccessPageView) orderSuccessPageView.style.display = 'none';
+    if (accountPageView) accountPageView.style.display = 'none';
+    infoPageView.style.display = 'block';
+
+    renderInfoPage(infoPageView, pageKey, {
+      onContactSubmit: (data) => {
+        window.showToast(`Thank you, ${data.name}. Your atelier inquiry has been received.`);
+      }
+    });
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Client-Side Router for Inzaish Collection Blueprint
+  window.appRouter = new Router({
+    '/': () => {
+      const hp = document.getElementById('homepageView');
+      const cp = document.getElementById('collectionPageView');
+      const pp = document.getElementById('pdpPageView');
+      const wp = document.getElementById('wishlistPageView');
+      const kp = document.getElementById('checkoutPageView');
+      const sp = document.getElementById('orderSuccessPageView');
+      const ap = document.getElementById('accountPageView');
+      const ip = document.getElementById('infoPageView');
+      if (hp) hp.style.display = 'block';
+      if (cp) cp.style.display = 'none';
+      if (pp) pp.style.display = 'none';
+      if (wp) wp.style.display = 'none';
+      if (kp) kp.style.display = 'none';
+      if (sp) sp.style.display = 'none';
+      if (ap) ap.style.display = 'none';
+      if (ip) ip.style.display = 'none';
+      state.activeCategory = 'all';
+      document.querySelectorAll('.filter-pill[data-cat]').forEach(p => p.classList.toggle('active', p.dataset.cat === 'all'));
+      renderCatalog();
+    },
+    '/women': () => {
+      loadCollectionRoute('women');
+    },
+    '/men': () => {
+      loadCollectionRoute('men');
+    },
+    '/unstitched': () => {
+      loadCollectionRoute('unstitched');
+    },
+    '/pret': () => {
+      loadCollectionRoute('pret');
+    },
+    '/festive': () => {
+      loadCollectionRoute('festive');
+    },
+    '/new-arrivals': () => {
+      loadCollectionRoute('new-arrivals');
+    },
+    '/accessories': () => {
+      loadCollectionRoute('accessories');
+    },
+    '/sale': () => {
+      loadCollectionRoute('sale');
+    },
+    '/cart': () => {
+      loadCheckoutRoute();
+    },
+    '/checkout': () => {
+      loadCheckoutRoute();
+    },
+    '/order-success': () => {
+      loadOrderSuccessRoute();
+    },
+    '/wishlist': () => {
+      loadWishlistRoute();
+    },
+    '/account': () => {
+      loadAccountRoute('orders');
+    },
+    '/orders': () => {
+      loadAccountRoute('orders');
+    },
+    '/track-order': () => {
+      loadAccountRoute('track');
+    },
+    '/measurements': () => {
+      loadAccountRoute('measurements');
+    },
+    '/size-guide': () => {
+      loadInfoRoute('size-guide');
+    },
+    '/shipping-policy': () => {
+      loadInfoRoute('shipping-policy');
+    },
+    '/returns-policy': () => {
+      loadInfoRoute('returns-policy');
+    },
+    '/about': () => {
+      loadInfoRoute('about');
+    },
+    '/contact': () => {
+      loadInfoRoute('contact');
+    },
+    '/faqs': () => {
+      loadInfoRoute('shipping-policy');
+    },
+    '/privacy-policy': () => {
+      loadInfoRoute('about');
+    },
+    '/terms-and-conditions': () => {
+      loadInfoRoute('about');
+    },
+    '/product/:slug': (params) => {
+      loadPDPRoute(params.slug);
+    }
+  });
+
   // Escape key closes any open modal, drawer, or search
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
@@ -1397,9 +2109,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (wishlistBtn) {
     wishlistBtn.onclick = () => {
-      wishlistDrawer.classList.add('active');
-      wishlistBackdrop.classList.add('active');
-      document.body.style.overflow = 'hidden';
+      window.location.hash = '#/wishlist';
     };
   }
   const closeWishlist = () => {
@@ -1409,6 +2119,12 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   if (wishlistCloseBtn) wishlistCloseBtn.onclick = closeWishlist;
   if (wishlistBackdrop) wishlistBackdrop.onclick = closeWishlist;
+  const viewFullWishlistBtn = document.getElementById('viewFullWishlistBtn');
+  if (viewFullWishlistBtn) {
+    viewFullWishlistBtn.onclick = () => {
+      closeWishlist();
+    };
+  }
 
   // Filter Pills click handler
   const filterPills = document.querySelectorAll('.filter-pill[data-cat]');
@@ -1456,6 +2172,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  const exploreActiveFabricBtn = document.getElementById('exploreActiveFabricBtn');
+  if (exploreActiveFabricBtn) {
+    exploreActiveFabricBtn.onclick = () => {
+      const activeBtn = document.querySelector('#fabricButtons .filter-pill.active');
+      const fabricKey = activeBtn ? activeBtn.dataset.fabric : 'raw-silk';
+      if (fabricKey === 'fine-lawn' || fabricKey === 'organza') {
+        window.location.hash = '#/unstitched';
+      } else {
+        window.location.hash = '#/pret';
+      }
+    };
+  }
+
   // Track Order Modal
   const trackBtn = document.getElementById('trackOrderBtn');
   const trackBackdrop = document.getElementById('trackBackdrop');
@@ -1463,12 +2192,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const footerTrackLink = document.getElementById('footerTrackLink');
 
   window.openTrackModal = (e) => {
-    if (e) e.preventDefault();
-    trackBackdrop.classList.add('active');
-    document.body.style.overflow = 'hidden';
+    if (e && e.preventDefault) e.preventDefault();
+    window.location.hash = '#/track-order';
   };
   const closeTrackModal = () => {
-    trackBackdrop.classList.remove('active');
+    if (trackBackdrop) trackBackdrop.classList.remove('active');
     document.body.style.overflow = '';
   };
   if (trackBtn) trackBtn.onclick = window.openTrackModal;
@@ -1513,10 +2241,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
       closeCart();
-      const subtotal = state.cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-      document.getElementById('checkoutTotalText').textContent = formatPKR(subtotal);
-      checkoutBackdrop.classList.add('active');
-      document.body.style.overflow = 'hidden';
+      window.location.hash = '#/checkout';
     };
   }
 
