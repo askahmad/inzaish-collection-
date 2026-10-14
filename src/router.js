@@ -84,6 +84,11 @@ export class Router {
       }
     });
 
+    // Unfocus active nav elements to dismiss mega-menus upon route transition
+    if (document.activeElement && typeof document.activeElement.blur === 'function') {
+      document.activeElement.blur();
+    }
+
     if (typeof matchedHandler === 'function') {
       matchedHandler(params, path);
     }

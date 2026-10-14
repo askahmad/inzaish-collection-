@@ -573,6 +573,11 @@ app.innerHTML = `
     </div>
   </footer>
 
+  <!-- FLOATING ATELIER SCROLL TO TOP -->
+  <button class="atelier-scroll-top-btn" id="atelierScrollTopBtn" aria-label="Scroll back to top">
+    <svg viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6"></path></svg>
+  </button>
+
   <!-- ========================================================================
        MODALS, DRAWERS & OVERLAYS
        ======================================================================== -->
@@ -1506,26 +1511,39 @@ document.addEventListener('DOMContentLoaded', () => {
   renderCatalog();
   updateCartUI();
 
+  // Centralized Smooth Editorial View Switcher with Entrance Motion
+  function switchActiveView(targetViewId) {
+    const viewIds = [
+      'homepageView',
+      'collectionPageView',
+      'pdpPageView',
+      'wishlistPageView',
+      'checkoutPageView',
+      'orderSuccessPageView',
+      'accountPageView',
+      'infoPageView'
+    ];
+
+    viewIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (id === targetViewId) {
+        el.style.display = 'block';
+        el.classList.remove('editorial-view-enter');
+        void el.offsetWidth;
+        el.classList.add('editorial-view-enter');
+      } else {
+        el.style.display = 'none';
+        el.classList.remove('editorial-view-enter');
+      }
+    });
+  }
+
   // Client-Side Collection View Engine with Multi-Faceted Filtering
   function loadCollectionRoute(routeKey, subcategory = 'all', fabric = 'all', priceTier = 'all', sort = 'featured') {
-    const homepageView = document.getElementById('homepageView');
+    switchActiveView('collectionPageView');
     const collectionPageView = document.getElementById('collectionPageView');
-    const pdpPageView = document.getElementById('pdpPageView');
-    const wishlistPageView = document.getElementById('wishlistPageView');
-    const checkoutPageView = document.getElementById('checkoutPageView');
-    const orderSuccessPageView = document.getElementById('orderSuccessPageView');
-    const accountPageView = document.getElementById('accountPageView');
-    const infoPageView = document.getElementById('infoPageView');
     if (!collectionPageView) return;
-
-    if (homepageView) homepageView.style.display = 'none';
-    if (pdpPageView) pdpPageView.style.display = 'none';
-    if (wishlistPageView) wishlistPageView.style.display = 'none';
-    if (checkoutPageView) checkoutPageView.style.display = 'none';
-    if (orderSuccessPageView) orderSuccessPageView.style.display = 'none';
-    if (accountPageView) accountPageView.style.display = 'none';
-    if (infoPageView) infoPageView.style.display = 'none';
-    collectionPageView.style.display = 'block';
 
     // 1. Determine base products & metadata for category
     let baseList = [];
@@ -1692,27 +1710,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Dedicated Product Detail Page (PDP) View Engine
   function loadPDPRoute(slug) {
-    const homepageView = document.getElementById('homepageView');
-    const collectionPageView = document.getElementById('collectionPageView');
-    const pdpPageView = document.getElementById('pdpPageView');
-    const wishlistPageView = document.getElementById('wishlistPageView');
-    const checkoutPageView = document.getElementById('checkoutPageView');
-    const orderSuccessPageView = document.getElementById('orderSuccessPageView');
-    const accountPageView = document.getElementById('accountPageView');
-    const infoPageView = document.getElementById('infoPageView');
-    if (!pdpPageView) return;
-
     const product = PRODUCTS.find(p => p.slug === slug || p.id === slug) || PRODUCTS[0];
     if (!product) return;
 
-    if (homepageView) homepageView.style.display = 'none';
-    if (collectionPageView) collectionPageView.style.display = 'none';
-    if (wishlistPageView) wishlistPageView.style.display = 'none';
-    if (checkoutPageView) checkoutPageView.style.display = 'none';
-    if (orderSuccessPageView) orderSuccessPageView.style.display = 'none';
-    if (accountPageView) accountPageView.style.display = 'none';
-    if (infoPageView) infoPageView.style.display = 'none';
-    pdpPageView.style.display = 'block';
+    switchActiveView('pdpPageView');
+    const pdpPageView = document.getElementById('pdpPageView');
+    if (!pdpPageView) return;
 
     const isWishlisted = state.wishlist.includes(product.id);
 
@@ -1758,24 +1761,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Dedicated Editorial Wishlist View Engine
   function loadWishlistRoute() {
-    const homepageView = document.getElementById('homepageView');
-    const collectionPageView = document.getElementById('collectionPageView');
-    const pdpPageView = document.getElementById('pdpPageView');
+    switchActiveView('wishlistPageView');
     const wishlistPageView = document.getElementById('wishlistPageView');
-    const checkoutPageView = document.getElementById('checkoutPageView');
-    const orderSuccessPageView = document.getElementById('orderSuccessPageView');
-    const accountPageView = document.getElementById('accountPageView');
-    const infoPageView = document.getElementById('infoPageView');
     if (!wishlistPageView) return;
-
-    if (homepageView) homepageView.style.display = 'none';
-    if (collectionPageView) collectionPageView.style.display = 'none';
-    if (pdpPageView) pdpPageView.style.display = 'none';
-    if (checkoutPageView) checkoutPageView.style.display = 'none';
-    if (orderSuccessPageView) orderSuccessPageView.style.display = 'none';
-    if (accountPageView) accountPageView.style.display = 'none';
-    if (infoPageView) infoPageView.style.display = 'none';
-    wishlistPageView.style.display = 'block';
 
     renderWishlistPage(wishlistPageView, state.wishlist, PRODUCTS, {
       onMoveToCart: (id) => {
@@ -1806,24 +1794,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Dedicated Express Checkout View Engine
   function loadCheckoutRoute() {
-    const homepageView = document.getElementById('homepageView');
-    const collectionPageView = document.getElementById('collectionPageView');
-    const pdpPageView = document.getElementById('pdpPageView');
-    const wishlistPageView = document.getElementById('wishlistPageView');
+    switchActiveView('checkoutPageView');
     const checkoutPageView = document.getElementById('checkoutPageView');
-    const orderSuccessPageView = document.getElementById('orderSuccessPageView');
-    const accountPageView = document.getElementById('accountPageView');
-    const infoPageView = document.getElementById('infoPageView');
     if (!checkoutPageView) return;
-
-    if (homepageView) homepageView.style.display = 'none';
-    if (collectionPageView) collectionPageView.style.display = 'none';
-    if (pdpPageView) pdpPageView.style.display = 'none';
-    if (wishlistPageView) wishlistPageView.style.display = 'none';
-    if (orderSuccessPageView) orderSuccessPageView.style.display = 'none';
-    if (accountPageView) accountPageView.style.display = 'none';
-    if (infoPageView) infoPageView.style.display = 'none';
-    checkoutPageView.style.display = 'block';
 
     renderCheckoutPage(checkoutPageView, state.cart, {
       appliedCoupon: state.appliedCoupon,
@@ -1860,24 +1833,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Dedicated Order Success View Engine
   function loadOrderSuccessRoute() {
-    const homepageView = document.getElementById('homepageView');
-    const collectionPageView = document.getElementById('collectionPageView');
-    const pdpPageView = document.getElementById('pdpPageView');
-    const wishlistPageView = document.getElementById('wishlistPageView');
-    const checkoutPageView = document.getElementById('checkoutPageView');
+    switchActiveView('orderSuccessPageView');
     const orderSuccessPageView = document.getElementById('orderSuccessPageView');
-    const accountPageView = document.getElementById('accountPageView');
-    const infoPageView = document.getElementById('infoPageView');
     if (!orderSuccessPageView) return;
-
-    if (homepageView) homepageView.style.display = 'none';
-    if (collectionPageView) collectionPageView.style.display = 'none';
-    if (pdpPageView) pdpPageView.style.display = 'none';
-    if (wishlistPageView) wishlistPageView.style.display = 'none';
-    if (checkoutPageView) checkoutPageView.style.display = 'none';
-    if (accountPageView) accountPageView.style.display = 'none';
-    if (infoPageView) infoPageView.style.display = 'none';
-    orderSuccessPageView.style.display = 'block';
 
     const orderData = state.lastOrder || (state.orders && state.orders[0]) || {
       orderId: 'IC-2026-891',
@@ -1905,24 +1863,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Dedicated Client Atelier (Account, Orders & Consignment Tracking) View Engine
   function loadAccountRoute(tab = 'orders') {
-    const homepageView = document.getElementById('homepageView');
-    const collectionPageView = document.getElementById('collectionPageView');
-    const pdpPageView = document.getElementById('pdpPageView');
-    const wishlistPageView = document.getElementById('wishlistPageView');
-    const checkoutPageView = document.getElementById('checkoutPageView');
-    const orderSuccessPageView = document.getElementById('orderSuccessPageView');
+    switchActiveView('accountPageView');
     const accountPageView = document.getElementById('accountPageView');
-    const infoPageView = document.getElementById('infoPageView');
     if (!accountPageView) return;
-
-    if (homepageView) homepageView.style.display = 'none';
-    if (collectionPageView) collectionPageView.style.display = 'none';
-    if (pdpPageView) pdpPageView.style.display = 'none';
-    if (wishlistPageView) wishlistPageView.style.display = 'none';
-    if (checkoutPageView) checkoutPageView.style.display = 'none';
-    if (orderSuccessPageView) orderSuccessPageView.style.display = 'none';
-    if (infoPageView) infoPageView.style.display = 'none';
-    accountPageView.style.display = 'block';
 
     renderAccountPage(accountPageView, state, {
       activeTab: tab,
@@ -1950,24 +1893,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Dedicated Editorial Information & Policy Pages View Engine
   function loadInfoRoute(pageKey = 'about') {
-    const homepageView = document.getElementById('homepageView');
-    const collectionPageView = document.getElementById('collectionPageView');
-    const pdpPageView = document.getElementById('pdpPageView');
-    const wishlistPageView = document.getElementById('wishlistPageView');
-    const checkoutPageView = document.getElementById('checkoutPageView');
-    const orderSuccessPageView = document.getElementById('orderSuccessPageView');
-    const accountPageView = document.getElementById('accountPageView');
+    switchActiveView('infoPageView');
     const infoPageView = document.getElementById('infoPageView');
     if (!infoPageView) return;
-
-    if (homepageView) homepageView.style.display = 'none';
-    if (collectionPageView) collectionPageView.style.display = 'none';
-    if (pdpPageView) pdpPageView.style.display = 'none';
-    if (wishlistPageView) wishlistPageView.style.display = 'none';
-    if (checkoutPageView) checkoutPageView.style.display = 'none';
-    if (orderSuccessPageView) orderSuccessPageView.style.display = 'none';
-    if (accountPageView) accountPageView.style.display = 'none';
-    infoPageView.style.display = 'block';
 
     renderInfoPage(infoPageView, pageKey, {
       onContactSubmit: (data) => {
@@ -1981,22 +1909,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Client-Side Router for Inzaish Collection Blueprint
   window.appRouter = new Router({
     '/': () => {
-      const hp = document.getElementById('homepageView');
-      const cp = document.getElementById('collectionPageView');
-      const pp = document.getElementById('pdpPageView');
-      const wp = document.getElementById('wishlistPageView');
-      const kp = document.getElementById('checkoutPageView');
-      const sp = document.getElementById('orderSuccessPageView');
-      const ap = document.getElementById('accountPageView');
-      const ip = document.getElementById('infoPageView');
-      if (hp) hp.style.display = 'block';
-      if (cp) cp.style.display = 'none';
-      if (pp) pp.style.display = 'none';
-      if (wp) wp.style.display = 'none';
-      if (kp) kp.style.display = 'none';
-      if (sp) sp.style.display = 'none';
-      if (ap) ap.style.display = 'none';
-      if (ip) ip.style.display = 'none';
+      switchActiveView('homepageView');
       state.activeCategory = 'all';
       document.querySelectorAll('.filter-pill[data-cat]').forEach(p => p.classList.toggle('active', p.dataset.cat === 'all'));
       renderCatalog();
@@ -2211,19 +2124,29 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   }
 
-  // Size Guide Modal from footer
+  // Size Guide & Tracking Navigation from footer
   const footerSizeLink = document.getElementById('footerSizeLink');
   if (footerSizeLink) {
     footerSizeLink.onclick = (e) => {
       e.preventDefault();
-      alert('Inzaish Collection Imperial Sizing Standards (Inches):\n\n' +
-            'XS: Chest 34" | Waist 26" | Hips 36" | Kurta Length 38"\n' +
-            'S:  Chest 36" | Waist 28" | Hips 38" | Kurta Length 38"\n' +
-            'M:  Chest 38" | Waist 30" | Hips 40" | Kurta Length 39"\n' +
-            'L:  Chest 41" | Waist 33" | Hips 43" | Kurta Length 40"\n' +
-            'XL: Chest 44" | Waist 36" | Hips 46" | Kurta Length 40"\n\n' +
-            'Unstitched Fabrics: 3.25m Shirt, 2.5m Dupatta, 2.5m Trouser included.');
+      window.location.hash = '#/size-guide';
     };
+  }
+
+  // Floating Atelier Scroll-to-Top Controller
+  const scrollTopBtn = document.getElementById('atelierScrollTopBtn');
+  if (scrollTopBtn) {
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 400) {
+        scrollTopBtn.classList.add('is-visible');
+      } else {
+        scrollTopBtn.classList.remove('is-visible');
+      }
+    }, { passive: true });
+
+    scrollTopBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
   }
 
   // Checkout Modal

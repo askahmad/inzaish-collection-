@@ -3824,6 +3824,165 @@
   }
 }
 
+/* ==========================================================================
+   PHASE 9 — 3D EFFECTS, TRANSITIONS & MOTION REFINEMENT
+   ========================================================================== */
+
+/* Editorial View Entrance Animation */
+@keyframes editorialViewEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.editorial-view-enter {
+  animation: editorialViewEnter 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity, transform;
+}
+
+/* Floating Atelier Scroll-to-Top Button */
+.atelier-scroll-top-btn {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(17, 17, 17, 0.1);
+  cursor: pointer;
+  z-index: 90;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.atelier-scroll-top-btn.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.atelier-scroll-top-btn:hover {
+  background: var(--text-primary);
+  color: #FFFFFF;
+  border-color: var(--text-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(17, 17, 17, 0.16);
+}
+
+.atelier-scroll-top-btn svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+}
+
+/* Luxury Interactive Micro-Interactions */
+.product-card {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 36px rgba(17, 17, 17, 0.08);
+}
+
+.product-card .card-media-wrapper {
+  overflow: hidden;
+}
+
+.product-card .product-img {
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.product-card:hover .product-img {
+  transform: scale(1.035);
+}
+
+/* Interactive Swatch Pill Glow */
+.swatch-pill {
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.swatch-pill:hover {
+  transform: scale(1.06);
+  border-color: var(--accent-brass) !important;
+}
+
+.swatch-pill.active {
+  box-shadow: 0 0 0 2px var(--bg-card), 0 0 0 4px var(--accent-brass);
+}
+
+/* Luxury Button Shimmer Effects */
+.btn-hero-primary,
+.pdp-add-to-bag-btn,
+.checkout-submit-btn,
+.btn-brand-accent {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-hero-primary::after,
+.pdp-add-to-bag-btn::after,
+.checkout-submit-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.18),
+    transparent
+  );
+  transform: skewX(-20deg);
+  transition: none;
+}
+
+.btn-hero-primary:hover::after,
+.pdp-add-to-bag-btn:hover::after,
+.checkout-submit-btn:hover::after {
+  left: 150%;
+  transition: left 0.75s ease-in-out;
+}
+
+/* Material Lab Canvas Wrapper Touch Styles */
+#materialCanvas {
+  touch-action: none;
+  user-select: none;
+}
+
+/* Accessibility: Full Reduced Motion Overrides */
+@media (prefers-reduced-motion: reduce) {
+  .editorial-view-enter,
+  .product-card,
+  .product-card .product-img,
+  .swatch-pill,
+  .atelier-scroll-top-btn,
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+
 
 
 

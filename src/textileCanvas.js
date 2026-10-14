@@ -2,22 +2,19 @@ import * as THREE from 'three';
 
 /**
  * The Loom of Light — Immersive Fashion Atelier 3D Textile Installation
- * Dual sculptural procedural silk ribbons responding to cursor velocity and scroll.
+ * Procedural raw silk and ethereal organza ribbons undulating with responsive cursor physics.
+ * Optimized for high performance, mobile GPU scaling, and reduced-motion accessibility.
  */
 export function initTextileCanvas(containerId) {
   const container = document.getElementById(containerId);
-  if (!container) return;
+  if (!container) return () => {};
 
-  // Reduced motion preference check
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    console.log('[Inzaish Collection 3D] Reduced motion enabled; 3D canvas idle.');
-    return;
-  }
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // Scene, Camera, Renderer
   const scene = new THREE.Scene();
-  const width = container.clientWidth || window.innerWidth;
-  const height = container.clientHeight || window.innerHeight;
+  let width = container.clientWidth || window.innerWidth;
+  let height = container.clientHeight || window.innerHeight;
 
   const camera = new THREE.PerspectiveCamera(42, width / height, 0.1, 100);
   camera.position.set(0.5, 0.1, 7.2);
@@ -31,7 +28,7 @@ export function initTextileCanvas(containerId) {
     });
   } catch (e) {
     console.warn('[Inzaish Collection] WebGL not supported on device:', e);
-    return;
+    return () => {};
   }
 
   // Device pixel ratio clamped for smooth 60fps performance
@@ -46,31 +43,35 @@ export function initTextileCanvas(containerId) {
 
   // Progressive Fade-In
   requestAnimationFrame(() => {
-    renderer.domElement.style.opacity = '1';
+    if (renderer.domElement) {
+      renderer.domElement.style.opacity = '1';
+    }
   });
 
   // Sculptural Lighting
-  const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
+  const ambientLight = new THREE.AmbientLight(0xfffbf2, 1.6);
   scene.add(ambientLight);
 
-  const mainLight = new THREE.DirectionalLight(0xfffbf2, 3.0);
+  const mainLight = new THREE.DirectionalLight(0xfff8ee, 3.2);
   mainLight.position.set(5, 7, 8);
   scene.add(mainLight);
 
-  const rimLight = new THREE.DirectionalLight(0xc5a880, 2.4);
+  const rimLight = new THREE.DirectionalLight(0xc5a880, 2.5);
   rimLight.position.set(-6, -3, 3);
   scene.add(rimLight);
 
-  const backLight = new THREE.DirectionalLight(0xe8dfd5, 1.2);
+  const backLight = new THREE.DirectionalLight(0xe8dfd5, 1.4);
   backLight.position.set(0, -5, -4);
   scene.add(backLight);
 
-  // Primary Ribbon Geometry (Champagne Raw Silk)
-  const segmentsX = 96;
-  const segmentsY = 24;
+  // Adaptive geometry resolution for mobile vs desktop
+  const isMobile = window.innerWidth < 768;
+  const segmentsX = isMobile ? 48 : 96;
+  const segmentsY = isMobile ? 16 : 24;
   const ribbonWidth = 12.0;
   const ribbonHeight = 3.6;
 
+  // Primary Ribbon Geometry (Champagne Raw Silk)
   const geometry1 = new THREE.PlaneGeometry(ribbonWidth, ribbonHeight, segmentsX, segmentsY);
   const posAttr1 = geometry1.attributes.position;
   const origPos1 = posAttr1.array.slice();
@@ -93,7 +94,12 @@ export function initTextileCanvas(containerId) {
   scene.add(ribbonMesh1);
 
   // Secondary Ethereal Ribbon Geometry (Sheer Translucent Organza)
-  const geometry2 = new THREE.PlaneGeometry(ribbonWidth * 0.9, ribbonHeight * 0.75, 72, 20);
+  const geometry2 = new THREE.PlaneGeometry(
+    ribbonWidth * 0.9,
+    ribbonHeight * 0.75,
+    isMobile ? 36 : 72,
+    isMobile ? 14 : 20
+  );
   const posAttr2 = geometry2.attributes.position;
   const origPos2 = posAttr2.array.slice();
 
@@ -116,6 +122,16 @@ export function initTextileCanvas(containerId) {
   ribbonMesh2.position.set(0.2, -0.4, -0.8);
   scene.add(ribbonMesh2);
 
+  // If user prefers reduced motion, render single static frame and freeze
+  if (prefersReducedMotion) {
+    renderer.render(scene, camera);
+    return () => {
+      if (renderer.domElement && container.contains(renderer.domElement)) {
+        container.removeChild(renderer.domElement);
+      }
+    };
+  }
+
   // Pointer Interaction
   const mouse = { x: 0, y: 0, targetX: 0, targetY: 0 };
   const handlePointerMove = (e) => {
@@ -127,10 +143,14 @@ export function initTextileCanvas(containerId) {
 
   window.addEventListener('pointermove', handlePointerMove, { passive: true });
 
-  // Animation Loop & Performance Suspension
+  // High-precision clock using performance.now (avoids THREE.Clock deprecation warnings)
+  const startTime = performance.now();
   let isVisible = true;
-  let clock = new THREE.Clock();
+  let isTabActive = true;
+  let isContextLost = false;
+  let animationFrameId;
 
+  // Viewport Intersection Observer (suspends WebGL when scrolled away)
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       isVisible = entry.isIntersecting;
@@ -138,14 +158,36 @@ export function initTextileCanvas(containerId) {
   }, { threshold: 0.05 });
   observer.observe(container);
 
-  let animationFrameId;
+  // Page visibility listener (saves GPU cycles when tab is backgrounded)
+  const handleVisibilityChange = () => {
+    isTabActive = !document.hidden;
+  };
+  document.addEventListener('visibilitychange', handleVisibilityChange);
+
+  // WebGL Context Loss & Restoration Handling
+  const handleContextLost = (e) => {
+    e.preventDefault();
+    isContextLost = true;
+    cancelAnimationFrame(animationFrameId);
+    console.warn('[Inzaish Collection 3D] WebGL context lost.');
+  };
+
+  const handleContextRestored = () => {
+    console.log('[Inzaish Collection 3D] WebGL context restored.');
+    isContextLost = false;
+    animate();
+  };
+
+  renderer.domElement.addEventListener('webglcontextlost', handleContextLost, false);
+  renderer.domElement.addEventListener('webglcontextrestored', handleContextRestored, false);
 
   function animate() {
+    if (isContextLost) return;
     animationFrameId = requestAnimationFrame(animate);
 
-    if (!isVisible) return; // Suspends rendering when out of viewport
+    if (!isVisible || !isTabActive) return;
 
-    const elapsedTime = clock.getElapsedTime();
+    const elapsedTime = (performance.now() - startTime) * 0.001;
 
     // Smooth mouse interpolation
     mouse.x += (mouse.targetX - mouse.x) * 0.045;
@@ -160,15 +202,17 @@ export function initTextileCanvas(containerId) {
 
       const wave1 = Math.sin(origX * 0.85 + elapsedTime * 1.3) * 0.45;
       const wave2 = Math.cos(origY * 1.2 + origX * 0.55 + elapsedTime * 0.85) * 0.35;
+      const wave3 = Math.sin((origX + origY) * 0.4 + elapsedTime * 1.6) * 0.15;
       const pointerReact = Math.sin(u * Math.PI + elapsedTime * 1.8) * mouse.x * 0.55;
 
-      pos1.setZ(i, wave1 + wave2 + pointerReact);
+      pos1.setZ(i, wave1 + wave2 + wave3 + pointerReact);
     }
     pos1.needsUpdate = true;
     geometry1.computeVertexNormals();
 
     // Undulate Secondary Organza Ribbon (gentler harmonic phase)
     const pos2 = geometry2.attributes.position;
+    const segs2X = isMobile ? 36 : 72;
     for (let i = 0; i < pos2.count; i++) {
       const origX = origPos2[i * 3];
       const origY = origPos2[i * 3 + 1];
@@ -195,9 +239,9 @@ export function initTextileCanvas(containerId) {
 
   // Resize Handler
   const handleResize = () => {
-    if (!container) return;
-    const newWidth = container.clientWidth;
-    const newHeight = container.clientHeight;
+    if (!container || !renderer) return;
+    const newWidth = container.clientWidth || window.innerWidth;
+    const newHeight = container.clientHeight || window.innerHeight;
     camera.aspect = newWidth / newHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(newWidth, newHeight);
@@ -209,9 +253,21 @@ export function initTextileCanvas(containerId) {
     cancelAnimationFrame(animationFrameId);
     window.removeEventListener('pointermove', handlePointerMove);
     window.removeEventListener('resize', handleResize);
+    document.removeEventListener('visibilitychange', handleVisibilityChange);
     observer.disconnect();
-    if (renderer.domElement && container.contains(renderer.domElement)) {
-      container.removeChild(renderer.domElement);
+
+    if (renderer.domElement) {
+      renderer.domElement.removeEventListener('webglcontextlost', handleContextLost);
+      renderer.domElement.removeEventListener('webglcontextrestored', handleContextRestored);
+      if (container.contains(renderer.domElement)) {
+        container.removeChild(renderer.domElement);
+      }
     }
+
+    geometry1.dispose();
+    geometry2.dispose();
+    silkMaterial.dispose();
+    organzaMaterial.dispose();
+    renderer.dispose();
   };
 }
