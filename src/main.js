@@ -60,163 +60,172 @@ function saveOrders() {
 const app = document.getElementById('app');
 
 app.innerHTML = `
-  <!-- COMPACT STORE POLICIES ANNOUNCEMENT BAR -->
-  <aside class="top-bar" id="announcementBar">
-    <span>Nationwide Express Delivery Across 150+ Cities</span>
-    <span>•</span>
-    <span>Free Shipping on Orders Over <strong class="highlight">PKR 7,500</strong></span>
-    <span>•</span>
-    <span>Cash on Delivery (COD) Available</span>
-    <span>•</span>
-    <span>WhatsApp Styling Assistance: <strong class="highlight">+92 300 1234567</strong></span>
+  <!-- HAUTE COUTURE EDITORIAL ANNOUNCEMENT TICKER -->
+  <aside class="top-bar-couture" id="announcementBar">
+    <div class="top-bar-couture-content">
+      <span class="couture-tag">ATELIER NOTICE</span>
+      <span class="couture-ticker-text">Complimentary Nationwide Express Delivery Above PKR 7,500 &bull; Cash on Delivery Available Across 150+ Pakistani Cities</span>
+      <a href="https://wa.me/923001234567" target="_blank" rel="noopener" class="couture-concierge-pill">
+        <span>Concierge +92 300 1234567</span>
+      </a>
+    </div>
   </aside>
 
-  <!-- LUXURY EDITORIAL HEADER WITH ACCESSIBLE MEGA-MENUS -->
-  <header class="site-header" id="siteHeader">
-    <div class="header-container">
-      <button class="menu-toggle" id="mobileMenuToggle" aria-label="Open Navigation Menu" aria-expanded="false" aria-controls="mobileNavDrawer">
-        <span></span>
-        <span></span>
-      </button>
+  <!-- LUXURY EDITORIAL HEADER (3-ZONE HAUTE COUTURE SYMMETRY) -->
+  <header class="site-header-couture" id="siteHeader">
+    <div class="header-couture-inner">
+      <!-- Zone 1: Left Navigation & Drawer Trigger -->
+      <div class="header-zone-left">
+        <button class="menu-toggle-couture" id="mobileMenuToggle" aria-label="Open Navigation Menu" aria-expanded="false" aria-controls="mobileNavDrawer">
+          <span class="toggle-bar"></span>
+          <span class="toggle-bar"></span>
+          <span class="toggle-label">MENU</span>
+        </button>
 
-      <a href="#/" class="brand-logo" aria-label="Inzaish Collection Homepage">
-        <span class="brand-logo-text">INZAISH COLLECTION</span>
-        <span class="brand-tagline">Contemporary Pakistani Luxury • Karachi • Lahore • Islamabad</span>
-      </a>
+        <nav class="desktop-nav-couture" id="mainNav" aria-label="Main Navigation">
+          <!-- WOMEN WITH MEGA-MENU -->
+          <div class="nav-item-has-mega">
+            <a href="#/women" class="couture-nav-link" id="womenNavTrigger" aria-expanded="false" aria-controls="womenMegaMenu">
+              Women ▾
+            </a>
+            <div class="mega-menu-wrapper" id="womenMegaMenu" role="region" aria-label="Women's Collection Menu">
+              <div class="mega-menu-inner">
+                <div>
+                  <h4 class="mega-col-heading">Unstitched Fabrics <span>Heirloom</span></h4>
+                  <ul class="mega-links-list">
+                    <li><a href="#/unstitched" class="mega-link">1-Piece Shirt Lengths <span class="count">24</span></a></li>
+                    <li><a href="#/unstitched" class="mega-link">2-Piece Shirt &amp; Dupatta <span class="count">38</span></a></li>
+                    <li><a href="#/unstitched" class="mega-link">3-Piece Luxury Lawn <span class="count">42</span></a></li>
+                    <li><a href="#/unstitched" class="mega-link">Chikankari &amp; Schifli Editions <span class="count">18</span></a></li>
+                    <li><a href="#/unstitched" class="mega-link">Pure Handwoven Organza Dupattas <span class="count">14</span></a></li>
+                  </ul>
+                </div>
 
-      <!-- PRIMARY NAVIGATION -->
-      <nav class="main-nav" id="mainNav" aria-label="Main Navigation">
-        <!-- WOMEN WITH ACCESSIBLE MEGA-MENU -->
-        <div class="nav-item-has-mega">
-          <a href="#/women" class="nav-link" id="womenNavTrigger" aria-expanded="false" aria-controls="womenMegaMenu">
-            Women ▾
-          </a>
-          <div class="mega-menu-wrapper" id="womenMegaMenu" role="region" aria-label="Women's Collection Menu">
-            <div class="mega-menu-inner">
-              <div>
-                <h4 class="mega-col-heading">Unstitched Fabrics <span>Heirloom</span></h4>
-                <ul class="mega-links-list">
-                  <li><a href="#/unstitched" class="mega-link">1-Piece Shirt Lengths <span class="count">24</span></a></li>
-                  <li><a href="#/unstitched" class="mega-link">2-Piece Shirt &amp; Dupatta <span class="count">38</span></a></li>
-                  <li><a href="#/unstitched" class="mega-link">3-Piece Luxury Lawn <span class="count">42</span></a></li>
-                  <li><a href="#/unstitched" class="mega-link">Chikankari &amp; Schifli Editions <span class="count">18</span></a></li>
-                  <li><a href="#/unstitched" class="mega-link">Pure Handwoven Organza Dupattas <span class="count">14</span></a></li>
-                </ul>
-              </div>
+                <div>
+                  <h4 class="mega-col-heading">Ready-to-Wear (Pret) <span>Contemporary</span></h4>
+                  <ul class="mega-links-list">
+                    <li><a href="#/pret" class="mega-link">Everyday Minimalist Kurtas <span class="count">32</span></a></li>
+                    <li><a href="#/pret" class="mega-link">Architectural Silk Co-Ords <span class="count">16</span></a></li>
+                    <li><a href="#/pret" class="mega-link">Tailored Raw Silk Tunics <span class="count">21</span></a></li>
+                    <li><a href="#/pret" class="mega-link">Pleated Palazzo Pants &amp; Trousers <span class="count">19</span></a></li>
+                    <li><a href="#/festive" class="mega-link">Luxury Pret &amp; Evening Wear <span class="count">15</span></a></li>
+                  </ul>
+                </div>
 
-              <div>
-                <h4 class="mega-col-heading">Ready-to-Wear (Pret) <span>Contemporary</span></h4>
-                <ul class="mega-links-list">
-                  <li><a href="#/pret" class="mega-link">Everyday Minimalist Kurtas <span class="count">32</span></a></li>
-                  <li><a href="#/pret" class="mega-link">Architectural Silk Co-Ords <span class="count">16</span></a></li>
-                  <li><a href="#/pret" class="mega-link">Tailored Raw Silk Tunics <span class="count">21</span></a></li>
-                  <li><a href="#/pret" class="mega-link">Pleated Palazzo Pants &amp; Trousers <span class="count">19</span></a></li>
-                  <li><a href="#/festive" class="mega-link">Luxury Pret &amp; Evening Wear <span class="count">15</span></a></li>
-                </ul>
-              </div>
+                <div>
+                  <h4 class="mega-col-heading">Festive &amp; Formal <span>Artisanal</span></h4>
+                  <ul class="mega-links-list">
+                    <li><a href="#/festive" class="mega-link">Bridal &amp; Formal Peshwas <span class="count">08</span></a></li>
+                    <li><a href="#/festive" class="mega-link">Marori &amp; Zardozi Threadwork <span class="count">12</span></a></li>
+                    <li><a href="#/pret" class="mega-link">Tailored Architectural Abayas <span class="count">10</span></a></li>
+                    <li><a href="#/unstitched" class="mega-link">Pure Velvet &amp; Silk Shawls <span class="count">06</span></a></li>
+                    <li><a href="#textureLab" class="mega-link">Fabric Swatch Analysis (3D) <span class="count">LAB</span></a></li>
+                  </ul>
+                </div>
 
-              <div>
-                <h4 class="mega-col-heading">Festive &amp; Formal <span>Artisanal</span></h4>
-                <ul class="mega-links-list">
-                  <li><a href="#/festive" class="mega-link">Bridal &amp; Formal Peshwas <span class="count">08</span></a></li>
-                  <li><a href="#/festive" class="mega-link">Marori &amp; Zardozi Threadwork <span class="count">12</span></a></li>
-                  <li><a href="#/pret" class="mega-link">Tailored Architectural Abayas <span class="count">10</span></a></li>
-                  <li><a href="#/unstitched" class="mega-link">Pure Velvet &amp; Silk Shawls <span class="count">06</span></a></li>
-                  <li><a href="#textureLab" class="mega-link">Fabric Swatch Analysis (3D) <span class="count">LAB</span></a></li>
-                </ul>
-              </div>
-
-              <div>
-                <a href="#/product/nur-chikankari-3pc-luxury" class="mega-campaign-card">
-                  <img src="/assets/women_unstitched_luxe.jpg" alt="Nur Chikankari Collection" class="mega-campaign-img" />
-                  <div class="mega-campaign-overlay"></div>
-                  <div class="mega-campaign-content">
-                    <span class="mega-campaign-tag">Campaign Spotlight</span>
-                    <h5 class="mega-campaign-title">The "Nur" 3-Piece Chikankari Edit</h5>
-                    <p style="font-size: 0.76rem; color: #CCC; margin-bottom: 0.25rem;">Pistachio lawn with handwoven organza.</p>
-                    <span class="mega-campaign-cta">Explore Look <span>→</span></span>
-                  </div>
-                </a>
+                <div>
+                  <a href="#/product/nur-chikankari-3pc-luxury" class="mega-campaign-card">
+                    <img src="/assets/women_unstitched_luxe.jpg" alt="Nur Chikankari Collection" class="mega-campaign-img" />
+                    <div class="mega-campaign-overlay"></div>
+                    <div class="mega-campaign-content">
+                      <span class="mega-campaign-tag">Campaign Spotlight</span>
+                      <h5 class="mega-campaign-title">The "Nur" 3-Piece Chikankari Edit</h5>
+                      <p style="font-size: 0.76rem; color: #CCC; margin-bottom: 0.25rem;">Pistachio lawn with handwoven organza.</p>
+                      <span class="mega-campaign-cta">Explore Look <span>→</span></span>
+                    </div>
+                  </a>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- MEN WITH ACCESSIBLE MEGA-MENU -->
-        <div class="nav-item-has-mega">
-          <a href="#/men" class="nav-link" id="menNavTrigger" aria-expanded="false" aria-controls="menMegaMenu">
-            Men ▾
-          </a>
-          <div class="mega-menu-wrapper" id="menMegaMenu" role="region" aria-label="Men's Collection Menu">
-            <div class="mega-menu-inner">
-              <div>
-                <h4 class="mega-col-heading">Eastern Traditional <span>Bespoke</span></h4>
-                <ul class="mega-links-list">
-                  <li><a href="#/men" class="mega-link">Complete Shalwar Kameez Sets <span class="count">28</span></a></li>
-                  <li><a href="#/men" class="mega-link">Mandarin Bandhgala Kurtas <span class="count">34</span></a></li>
-                  <li><a href="#/men" class="mega-link">Egyptian Giza Liquid Cotton <span class="count">16</span></a></li>
-                  <li><a href="#/men" class="mega-link">Unstitched 4.5m Latha &amp; Karandi <span class="count">22</span></a></li>
-                </ul>
-              </div>
+          <!-- MEN WITH MEGA-MENU -->
+          <div class="nav-item-has-mega">
+            <a href="#/men" class="couture-nav-link" id="menNavTrigger" aria-expanded="false" aria-controls="menMegaMenu">
+              Men ▾
+            </a>
+            <div class="mega-menu-wrapper" id="menMegaMenu" role="region" aria-label="Men's Collection Menu">
+              <div class="mega-menu-inner">
+                <div>
+                  <h4 class="mega-col-heading">Eastern Traditional <span>Bespoke</span></h4>
+                  <ul class="mega-links-list">
+                    <li><a href="#/men" class="mega-link">Complete Shalwar Kameez Sets <span class="count">28</span></a></li>
+                    <li><a href="#/men" class="mega-link">Mandarin Bandhgala Kurtas <span class="count">34</span></a></li>
+                    <li><a href="#/men" class="mega-link">Egyptian Giza Liquid Cotton <span class="count">16</span></a></li>
+                    <li><a href="#/men" class="mega-link">Unstitched 4.5m Latha &amp; Karandi <span class="count">22</span></a></li>
+                  </ul>
+                </div>
 
-              <div>
-                <h4 class="mega-col-heading">Formal Layering <span>Structure</span></h4>
-                <ul class="mega-links-list">
-                  <li><a href="#/men" class="mega-link">Tailored Raw Silk Waistcoats <span class="count">18</span></a></li>
-                  <li><a href="#/men" class="mega-link">Prince Coats &amp; Bandhgalas <span class="count">07</span></a></li>
-                  <li><a href="#/men" class="mega-link">Textured Jamawar Linings <span class="count">09</span></a></li>
-                  <li><a href="#/accessories" class="mega-link">Horn &amp; Antiqued Brass Buttons <span class="count">12</span></a></li>
-                </ul>
-              </div>
+                <div>
+                  <h4 class="mega-col-heading">Formal Layering <span>Structure</span></h4>
+                  <ul class="mega-links-list">
+                    <li><a href="#/men" class="mega-link">Tailored Raw Silk Waistcoats <span class="count">18</span></a></li>
+                    <li><a href="#/men" class="mega-link">Prince Coats &amp; Bandhgalas <span class="count">07</span></a></li>
+                    <li><a href="#/men" class="mega-link">Textured Jamawar Linings <span class="count">09</span></a></li>
+                    <li><a href="#/accessories" class="mega-link">Horn &amp; Antiqued Brass Buttons <span class="count">12</span></a></li>
+                  </ul>
+                </div>
 
-              <div>
-                <h4 class="mega-col-heading">Contemporary &amp; Objects <span>Lifestyle</span></h4>
-                <ul class="mega-links-list">
-                  <li><a href="#/men" class="mega-link">Pure Linen Relaxed Shirts <span class="count">14</span></a></li>
-                  <li><a href="#/men" class="mega-link">Supima Cotton T-Shirts <span class="count">11</span></a></li>
-                  <li><a href="#/accessories" class="mega-link">Extrait de Parfum (Oud &amp; Amber) <span class="count">04</span></a></li>
-                  <li><a href="#/accessories" class="mega-link">Handmade Leather Peshawari Chappals <span class="count">08</span></a></li>
-                </ul>
-              </div>
+                <div>
+                  <h4 class="mega-col-heading">Contemporary &amp; Objects <span>Lifestyle</span></h4>
+                  <ul class="mega-links-list">
+                    <li><a href="#/men" class="mega-link">Pure Linen Relaxed Shirts <span class="count">14</span></a></li>
+                    <li><a href="#/men" class="mega-link">Supima Cotton T-Shirts <span class="count">11</span></a></li>
+                    <li><a href="#/accessories" class="mega-link">Extrait de Parfum (Oud &amp; Amber) <span class="count">04</span></a></li>
+                    <li><a href="#/accessories" class="mega-link">Handmade Leather Peshawari Chappals <span class="count">08</span></a></li>
+                  </ul>
+                </div>
 
-              <div>
-                <a href="#/product/onyx-bandhgala-kurta-set" class="mega-campaign-card">
-                  <img src="/assets/men_eastern_onyx.jpg" alt="The Onyx Kurta Series" class="mega-campaign-img" />
-                  <div class="mega-campaign-overlay"></div>
-                  <div class="mega-campaign-content">
-                    <span class="mega-campaign-tag">Bespoke Feature</span>
-                    <h5 class="mega-campaign-title">The Onyx Bandhgala Kurta</h5>
-                    <p style="font-size: 0.76rem; color: #CCC; margin-bottom: 0.25rem;">Super-fine Giza Egyptian liquid cotton.</p>
-                    <span class="mega-campaign-cta">View Silhouette <span>→</span></span>
-                  </div>
-                </a>
+                <div>
+                  <a href="#/product/onyx-bandhgala-kurta-set" class="mega-campaign-card">
+                    <img src="/assets/men_eastern_onyx.jpg" alt="The Onyx Kurta Series" class="mega-campaign-img" />
+                    <div class="mega-campaign-overlay"></div>
+                    <div class="mega-campaign-content">
+                      <span class="mega-campaign-tag">Bespoke Feature</span>
+                      <h5 class="mega-campaign-title">The Onyx Bandhgala Kurta</h5>
+                      <p style="font-size: 0.76rem; color: #CCC; margin-bottom: 0.25rem;">Super-fine Giza Egyptian liquid cotton.</p>
+                      <span class="mega-campaign-cta">View Silhouette <span>→</span></span>
+                    </div>
+                  </a>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <a href="#/new-arrivals" class="nav-link" data-filter="all">New Arrivals</a>
-        <a href="#/unstitched" class="nav-link" data-filter="women-unstitched">Unstitched</a>
-        <a href="#/pret" class="nav-link" data-filter="women-pret">Ready-to-Wear</a>
-        <a href="#/festive" class="nav-link" data-filter="festive">Festive / Formal</a>
-      </nav>
+          <a href="#/unstitched" class="couture-nav-link" data-filter="women-unstitched">Unstitched</a>
+          <a href="#/pret" class="couture-nav-link" data-filter="women-pret">Ready-to-Wear</a>
+          <a href="#/festive" class="couture-nav-link" data-filter="festive">Festive / Formal</a>
+        </nav>
+      </div>
 
-      <div class="header-actions">
-        <button class="action-btn" id="searchTriggerBtn" aria-label="Open Instant Search">
-          <span>🔍 Search <kbd class="search-kbd">/</kbd></span>
-        </button>
-        <button class="action-btn" id="wishlistTriggerBtn" aria-label="Open Curated Wishlist">
-          <span>Wishlist (<strong id="wishlistBadge">0</strong>)</span>
-        </button>
-        <a href="#/account" class="action-btn" id="accountNavBtn" aria-label="Client Atelier & Account">
-          <span>Atelier</span>
+      <!-- Zone 2: Center Majestic Wordmark -->
+      <div class="header-zone-center">
+        <a href="#/" class="brand-wordmark" aria-label="Inzaish Collection Homepage">
+          <span class="brand-name-serif">INZAISH</span>
+          <span class="brand-sub-serif">COLLECTION &bull; LAHORE</span>
         </a>
-        <a href="#/track-order" class="action-btn" id="trackOrderNavBtn" aria-label="Track Your Order Consignment">
-          <span>Track</span>
+      </div>
+
+      <!-- Zone 3: Right Clean Minimalist Action Cluster -->
+      <div class="header-zone-right">
+        <button class="couture-icon-btn" id="searchTriggerBtn" aria-label="Open Instant Search" title="Search Collection (/)">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <span class="icon-label-desktop">Search</span>
+        </button>
+
+        <a href="#/account" class="couture-icon-btn" id="accountNavBtn" aria-label="Client Atelier & Account" title="Client Atelier">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          <span class="icon-label-desktop">Atelier</span>
         </a>
-        <button class="bag-btn" id="cartToggleBtn" aria-label="Open Shopping Bag">
-          <span>BAG</span>
-          <span class="bag-badge" id="bagBadge">0</span>
+
+        <button class="couture-icon-btn" id="wishlistTriggerBtn" aria-label="Open Curated Wishlist" title="Saved Silhouettes">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+          <span class="couture-badge" id="wishlistBadge">0</span>
+        </button>
+
+        <button class="couture-bag-btn" id="cartToggleBtn" aria-label="Open Shopping Bag">
+          <span class="bag-label">BAG</span>
+          <span class="bag-count-pill" id="bagBadge">0</span>
         </button>
       </div>
     </div>
@@ -224,99 +233,73 @@ app.innerHTML = `
 
   <main id="mainPageContent">
     <div id="homepageView">
-      <!-- IMMERSIVE FASHION HERO SECTION -->
-      <section class="hero-section" id="heroSection">
-    <div class="hero-webgl-canvas" id="textileCanvas"></div>
-    <div class="hero-overlay-gradient"></div>
-
-    <div class="hero-grid-layout">
-      <!-- Left Editorial Storytelling Column -->
-      <div class="hero-text-block">
-        <div class="hero-eyebrow-badge">
-          <span class="dot"></span>
-          <span>Inzaish Collection • AW 25/26 Archive</span>
+      <!-- CINEMATIC HAUTE COUTURE HERO SECTION -->
+      <section class="hero-couture" id="heroSection">
+        <!-- Interactive 3D Textile Wave Canvas -->
+        <div class="hero-couture-canvas" id="textileCanvas"></div>
+        
+        <!-- Atmospheric High-Fashion Background Visual -->
+        <div class="hero-couture-backdrop">
+          <img src="/assets/hero_editorial.jpg" alt="Inzaish Collection Campaign" class="hero-couture-bg-img" />
+          <div class="hero-couture-scrim"></div>
         </div>
 
-        <h1 class="hero-title">
-          The Sovereign <span class="title-italic">Weave</span>
-        </h1>
-
-        <p class="hero-description">
-          Heirloom unbleached raw silk, bespoke Lahore chikankari, and architectural tailoring. 
-          Inzaish Collection celebrates pure natural fibers and time-honored subcontinental craft with modern restraint.
-        </p>
-
-        <!-- Dual Direct Shopping Entrypoints -->
-        <div class="hero-cta-group">
-          <a href="#/women" class="btn-hero-primary">
-            <span>Explore Women</span>
-            <span class="pill-count">142 Works →</span>
-          </a>
-          <a href="#/men" class="btn-hero-secondary">
-            <span>Discover Men</span>
-            <span class="pill-count">68 Works →</span>
-          </a>
-        </div>
-
-        <!-- Interactive Lookbook Quick-Peek Strip -->
-        <div class="hero-lookbook-strip">
-          <div class="hero-peek-item" onclick="window.openPDP('aa-w02')">
-            <img src="/assets/women_unstitched_luxe.jpg" alt="Nur Chikankari" class="hero-peek-thumb" />
-            <div class="hero-peek-meta">
-              <span class="hero-peek-label">Look 01 / Unstitched</span>
-              <span class="hero-peek-title">The "Nur" Chikankari</span>
-            </div>
+        <!-- Editorial Story & High-Fashion Content -->
+        <div class="hero-couture-content">
+          <div class="hero-couture-eyebrow">
+            <span class="eyebrow-accent-line"></span>
+            <span>AUTUMN / WINTER 25-26 &bull; THE ARCHIVE</span>
+            <span class="eyebrow-accent-line"></span>
           </div>
 
-          <div style="width: 1px; height: 32px; background: var(--border-subtle);"></div>
+          <h1 class="hero-couture-headline">
+            The Sovereign <span class="headline-italic">Weave</span>
+          </h1>
 
-          <div class="hero-peek-item" onclick="window.openPDP('aa-m01')">
-            <img src="/assets/men_eastern_onyx.jpg" alt="Onyx Kurta" class="hero-peek-thumb" />
-            <div class="hero-peek-meta">
-              <span class="hero-peek-label">Look 02 / Bespoke</span>
-              <span class="hero-peek-title">Onyx Bandhgala Kurta</span>
-            </div>
+          <p class="hero-couture-manifesto">
+            Unadulterated fiber purity, Old Lahore chikankari looms, and architectural drape. 
+            Designed with quiet subcontinental restraint for the discerning connoisseur.
+          </p>
+
+          <div class="hero-couture-actions">
+            <a href="#/women" class="btn-couture-primary">
+              <span>EXPLORE WOMEN'S COLLECTION</span>
+              <span class="btn-arrow">&rarr;</span>
+            </a>
+            <a href="#/men" class="btn-couture-secondary">
+              <span>BESPOKE MEN'S ATELIER</span>
+              <span class="btn-arrow">&rarr;</span>
+            </a>
           </div>
 
-          <div style="width: 1px; height: 32px; background: var(--border-subtle);"></div>
-
-          <div class="hero-peek-item" onclick="window.openPDP('aa-w03')">
-            <img src="/assets/women_festive_emerald.jpg" alt="Royal Emerald Peshwas" class="hero-peek-thumb" />
-            <div class="hero-peek-meta">
-              <span class="hero-peek-label">Look 03 / Festive</span>
-              <span class="hero-peek-title">Royal Emerald Peshwas</span>
+          <!-- Quick Editorial Lookbook Bar -->
+          <div class="hero-couture-footer-bar">
+            <div class="couture-curation-strip">
+              <a href="#/unstitched" class="curation-pill">
+                <span class="pill-dot"></span>
+                <span>Unstitched 3-Piece</span>
+              </a>
+              <a href="#/pret" class="curation-pill">
+                <span class="pill-dot"></span>
+                <span>Ready-to-Wear (Pret)</span>
+              </a>
+              <a href="#/festive" class="curation-pill">
+                <span class="pill-dot"></span>
+                <span>Formal &amp; Festive Peshwas</span>
+              </a>
+              <a href="#textureLab" class="curation-pill highlight">
+                <span class="pill-dot"></span>
+                <span>Interactive 3D Fabric Lab</span>
+              </a>
             </div>
-          </div>
-        </div>
-      </div>
 
-      <!-- Right Layered Editorial Card & Rotating Seal -->
-      <div class="hero-visual-frame">
-        <div class="hero-portrait-card">
-          <div class="hero-seal-badge" title="Inzaish Collection Verified Provenance">
-            <span class="hero-seal-text">INZAISH<br>COLL.<br>2026</span>
-          </div>
-
-          <img src="/assets/hero_editorial.jpg" alt="Inzaish Collection Editorial Campaign" class="hero-portrait-img" />
-
-          <div class="hero-portrait-caption">
-            <div>
-              <span style="font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent-brass-light);">Campaign Study</span>
-              <div style="font-family: var(--font-serif); font-size: 1.15rem;">Raw Silk Drape in Travertine</div>
+            <div class="hero-scroll-cue">
+              <span>SCROLL TO EXPLORE</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 13l5 5 5-5M7 6l5 5 5-5"/></svg>
             </div>
-            <button class="quick-view-btn" style="width: auto; padding: 0.45rem 0.95rem; font-size: 0.65rem;" onclick="window.openPDP('aa-w01')">
-              Inspect Piece
-            </button>
           </div>
         </div>
-      </div>
-    </div>
-
-    <div class="hero-3d-hint">
-      <span class="hero-3d-dot"></span>
-      <span>Sculptural 3D Silk Ribbons • Move Cursor to Undulate</span>
-    </div>
-  </section>
+      </section>
 
   <!-- MARQUEE STATEMENT STRIP -->
   <div class="statement-strip" aria-label="Brand Provenance Guarantees">
@@ -518,58 +501,84 @@ app.innerHTML = `
     <div id="infoPageView" style="display: none;"></div>
   </main>
 
-  <!-- SITE FOOTER -->
-  <footer class="site-footer">
-    <div class="footer-container">
-      <div>
-        <div class="footer-logo">INZAISH COLLECTION</div>
-        <p class="footer-bio">
-          Contemporary Pakistani luxury fashion brand devoted to architectural silhouettes, uncompromised textile purity, and bespoke craftsmanship.
-        </p>
-        <p style="font-size: 0.76rem; color: #888;">
-          Flagship Boutiques: Gulberg III, Lahore • Clifton, Karachi • F-7, Islamabad
-        </p>
-      </div>
-
-      <div>
-        <h5 class="footer-heading">Collections</h5>
-        <ul class="footer-links">
-          <li><a href="#/pret">Women's Ready-to-Wear</a></li>
-          <li><a href="#/unstitched">Unstitched 3-Piece</a></li>
-          <li><a href="#/men">Men's Kurta Sets</a></li>
-          <li><a href="#/men">Tailored Waistcoats</a></li>
-          <li><a href="#/festive">Festive Formals</a></li>
-        </ul>
-      </div>
-
-      <div>
-        <h5 class="footer-heading">Client Services</h5>
-        <ul class="footer-links">
-          <li><a href="#/track-order" id="footerTrackLink">Track Your Order</a></li>
-          <li><a href="#/size-guide" id="footerSizeLink">Imperial Size Guide</a></li>
-          <li><a href="#/shipping-policy">Shipping &amp; Delivery Policies</a></li>
-          <li><a href="#/returns-policy">Returns &amp; Exchanges</a></li>
-          <li><a href="#/about">About Inzaish Collection</a></li>
-          <li><a href="#/contact">Contact &amp; Flagship Boutiques</a></li>
-          <li><a href="https://wa.me/923001234567" target="_blank" rel="noopener">WhatsApp Concierge (+92 300 1234567)</a></li>
-        </ul>
-      </div>
-
-      <div>
-        <h5 class="footer-heading">The Inzaish Gazette</h5>
-        <p style="font-size: 0.8rem; color: #A8A69E; margin-bottom: 0.75rem;">
-          Subscribe to receive private invitations to seasonal drops and limited fabric releases.
-        </p>
-        <form class="newsletter-input-group" onsubmit="event.preventDefault(); window.showToast('Thank you for subscribing to Inzaish Collection.');">
-          <input type="email" class="newsletter-input" placeholder="Your email address" required aria-label="Email address" />
-          <button type="submit" class="newsletter-submit">Join</button>
-        </form>
+  <!-- HAUTE COUTURE ATELIER FOOTER -->
+  <footer class="site-footer-couture">
+    <!-- Top Monogram & Flagship Header -->
+    <div class="footer-couture-heraldry">
+      <div class="footer-heraldry-brand">INZAISH COLLECTION</div>
+      <div class="footer-heraldry-cities">
+        <span>LAHORE &bull; GULBERG II</span>
+        <span class="city-dot">&bull;</span>
+        <span>KARACHI &bull; CLIFTON</span>
+        <span class="city-dot">&bull;</span>
+        <span>ISLAMABAD &bull; BEVERLY CENTRE</span>
       </div>
     </div>
 
-    <div class="footer-bottom">
-      <span>© 2026 INZAISH COLLECTION. All Rights Reserved. Built for the Pakistani Luxury Market.</span>
-      <span>Payments: Cash on Delivery • PayFast • Safepay • Visa / Mastercard</span>
+    <!-- 4 Curated Editorial Columns -->
+    <div class="footer-couture-grid">
+      <!-- Col 1 -->
+      <div class="footer-couture-col">
+        <h5 class="footer-couture-heading">The Collections</h5>
+        <ul class="footer-couture-links">
+          <li><a href="#/unstitched">Unstitched 3-Piece Silk &amp; Lawn</a></li>
+          <li><a href="#/pret">Architectural Ready-to-Wear (Pret)</a></li>
+          <li><a href="#/men">Men's Mandarin Bandhgala Sets</a></li>
+          <li><a href="#/men">Hand-Spun Raw Silk Waistcoats</a></li>
+          <li><a href="#/festive">Couture Bridal &amp; Formal Peshwas</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 2 -->
+      <div class="footer-couture-col">
+        <h5 class="footer-couture-heading">Client Concierge</h5>
+        <ul class="footer-couture-links">
+          <li><a href="#/track-order" id="footerTrackLink">Live Trax / TCS Consignment Telemetry</a></li>
+          <li><a href="#/size-guide" id="footerSizeLink">Imperial Tailoring Specifications</a></li>
+          <li><a href="#/shipping-policy">Nationwide Shipping &amp; COD Policies</a></li>
+          <li><a href="#/returns-policy">3-Day Doorstep Reverse Exchanges</a></li>
+          <li><a href="#/contact">Book a Flagship Boutique Appointment</a></li>
+          <li><a href="https://wa.me/923001234567" target="_blank" rel="noopener" class="footer-wa-highlight">WhatsApp Concierge (+92 300 1234567)</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 3 -->
+      <div class="footer-couture-col">
+        <h5 class="footer-couture-heading">House &amp; Provenance</h5>
+        <ul class="footer-couture-links">
+          <li><a href="#/about">The Sovereign Weave Heritage</a></li>
+          <li><a href="#/about">Artisan Guilds of Old Lahore</a></li>
+          <li><a href="#/about">Natural Fiber Purity Ethos</a></li>
+          <li><a href="#/about">Zero-Deadstock &amp; Limited Yardage</a></li>
+          <li><a href="#textureLab">Atelier 3D Material Science Lab</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 4 -->
+      <div class="footer-couture-col">
+        <h5 class="footer-couture-heading">The Inzaish Gazette</h5>
+        <p class="footer-gazette-desc">
+          Subscribe to receive private invitations to limited seasonal drops, unstitched previews, and private styling sessions.
+        </p>
+        <form class="footer-gazette-form" onsubmit="event.preventDefault(); window.showToast('Privilege registered. Welcome to the Inzaish Gazette.'); this.reset();">
+          <input type="email" class="footer-gazette-input" placeholder="Your email address" required aria-label="Email address" />
+          <button type="submit" class="footer-gazette-btn">JOIN</button>
+        </form>
+        <div class="footer-gazette-assurance">
+          <span>&bull; Handcrafted in Pakistan</span>
+          <span>&bull; No spam. Only private releases.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Trust & Symmetrical Bar -->
+    <div class="footer-couture-bottom">
+      <div class="bottom-trust-strip">
+        <span>Payments: Cash on Delivery (COD) Nationwide &bull; PayFast &bull; Safepay &bull; Visa / Mastercard</span>
+      </div>
+      <div class="bottom-rights-strip">
+        <span>&copy; 2026 INZAISH COLLECTION. ALL RIGHTS RESERVED. ARCHITECTURAL LUXURY FOR THE PAKISTANI CONNOISSEUR.</span>
+      </div>
     </div>
   </footer>
 
